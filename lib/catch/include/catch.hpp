@@ -10,7 +10,7 @@
  */
 #ifndef TWOBLUECUBES_SINGLE_INCLUDE_CATCH_HPP_INCLUDED
 #define TWOBLUECUBES_SINGLE_INCLUDE_CATCH_HPP_INCLUDED
-// start catch2.hpp
+// start catch.hpp
 
 
 #define CATCH_VERSION_MAJOR 2
@@ -2310,7 +2310,7 @@ namespace Catch {
 #if defined(CATCH_CONFIG_FAST_COMPILE) || defined(CATCH_CONFIG_DISABLE_EXCEPTIONS)
 
 ///////////////////////////////////////////////////////////////////////////////
-// Another way to speed-up compilation is to omit local try-catch2 for REQUIRE*
+// Another way to speed-up compilation is to omit local try-catch for REQUIRE*
 // macros.
 #define INTERNAL_CATCH_TRY
 #define INTERNAL_CATCH_CATCH( capturer )
@@ -4269,8 +4269,8 @@ namespace Catch {
 
 #include <string>
 
-// NB. Any general catch2 headers included here must be included
-// in catch2.hpp first to make sure they are included by the single
+// NB. Any general catch headers included here must be included
+// in catch.hpp first to make sure they are included by the single
 // header for non obj-usage
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -14998,6 +14998,6 @@ using Catch::Detail::Approx;
 #endif
 
 // end catch_reenable_warnings.h
-// end catch2.hpp
+// end catch.hpp
 #endif // TWOBLUECUBES_SINGLE_INCLUDE_CATCH_HPP_INCLUDED
 
