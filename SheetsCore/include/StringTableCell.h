@@ -1,15 +1,16 @@
 #pragma once
 
+#include <string>
 #include "TableCell.h"
 
-class IntegerTableCell : public TableCell {
+class StringTableCell : public TableCell {
 public:
-    explicit IntegerTableCell(int value);
+    explicit StringTableCell(std::string value);
 
     std::string getValue() override;
 
     void setValue(const std::string &value) override;
 
 private:
-    int _value;
+    std::string _value;
 };

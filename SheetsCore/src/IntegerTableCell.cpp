@@ -10,5 +10,5 @@ std::string IntegerTableCell::getValue() {
 }
 
 void IntegerTableCell::setValue(std::string const &value) {
-
+    _value = std::stoi(value);
 }
