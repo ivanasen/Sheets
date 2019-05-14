@@ -1,9 +1,16 @@
 #include "Table.h"
 
 const TableCell &Table::getCell(unsigned row, unsigned col) const {
-    return _tableValues[row][col];
+    return *_tableValues[row][col];
 }
 
-void Table::setCellValue(const std::string &value) {
+std::string Table::getCellValue(unsigned row, unsigned col) const {
+    return _tableValues[row][col]->getValue();
+}
+
+void Table::setCellValue(unsigned row, unsigned col, const std::string &value) {
+//    try {
+//        _tableValues[row][col]->setValue(value);
+//    } catch
 
 }
