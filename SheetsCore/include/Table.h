@@ -4,15 +4,20 @@
 #include <string>
 #include <memory>
 #include "TableCell.h"
+#include "../src/TableCellParser.h"
+
 
 class Table {
 public:
-    const TableCell &getCell(unsigned row, unsigned col) const;
+    Table(unsigned initialHeight, unsigned initialWidth);
 
-    std::string getCellValue(unsigned row, unsigned col) const;
+    TableCell getCell(unsigned row, unsigned col) const;
 
-    void setCellValue(unsigned row, unsigned col, const std::string &value);
+    void setCellValue(unsigned row, unsigned col, const std::string &cellValue);
 
 private:
-    std::vector<std::vector<std::shared_ptr<TableCell>>> _tableValues;
+    std::vector<std::vector<TableCell>> _tableValues;
+    TableCellParser _cellParser;
+
+    void _resizeIfNeeded(unsigned requiredHeight, unsigned requiredWidth);
 };

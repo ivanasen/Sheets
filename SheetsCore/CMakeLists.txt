@@ -3,7 +3,7 @@ project(SheetsCore)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(SOURCE_FILES src/IntegerTableCell.cpp src/StringTableCell.cpp include/StringTableCell.h src/ExpressionTableCell.cpp include/ExpressionTableCell.h src/DoubleTableCell.cpp include/DoubleTableCell.h src/Table.cpp include/Table.h src/TableCellParser.cpp src/TableCellParser.h)
+set(SOURCE_FILES src/Table.cpp include/Table.h src/CellType.h src/TableCellParser.cpp src/TableCellParser.h src/TableCell.cpp src/StringUtils.cpp)
 
 include_directories(${PROJECT_SOURCE_DIR}/include/)
 

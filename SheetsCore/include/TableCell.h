@@ -1,10 +1,19 @@
 #pragma once
 
+#include <string>
+#include "../src/CellType.h"
+
 class TableCell {
 public:
-    virtual std::string getValue() = 0;
+    TableCell();
 
-    virtual void setValue(const std::string &value) = 0;
+    explicit TableCell(CellType type, std::string value);
 
-    virtual ~TableCell() = default;
+    std::string getValue() const;
+
+    CellType getType() const;
+
+private:
+    std::string _value;
+    CellType _type;
 };
