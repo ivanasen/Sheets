@@ -1,0 +1,14 @@
+#pragma once
+
+enum class TokenType {
+    DECIMAL_SEPARATOR,
+    COMMA,
+    OPENING_PARENTHESIS,
+    CLOSING_PARENTHESIS,
+    PLUS,
+    MINUS,
+    MULTIPLICATION,
+    DIVISION,
+    IDENTIFIER,
+    EQUAL
+};

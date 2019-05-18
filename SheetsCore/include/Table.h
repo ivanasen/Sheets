@@ -6,12 +6,11 @@
 #include "TableCell.h"
 #include "../src/TableCellParser.h"
 
-
 class Table {
 public:
     Table(unsigned initialHeight, unsigned initialWidth);
 
-    TableCell getCell(unsigned row, unsigned col) const;
+    std::string getCellValue(unsigned row, unsigned col) const;
 
     void setCellValue(unsigned row, unsigned col, const std::string &cellValue);
 

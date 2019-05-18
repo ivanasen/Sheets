@@ -1,6 +1,7 @@
 #include <algorithm>
 #include "TableCellParser.h"
 #include "./StringUtils.cpp"
+#include "TokenValues.cpp"
 
 TableCell TableCellParser::parse(const std::string &string) const {
     if (_isInteger(string)) {
@@ -34,11 +35,12 @@ bool TableCellParser::_isDecimal(const std::string &s) const {
     std::string trimmed = s;
     trim(trimmed);
 
+    std::string decimalSeparator = TOKEN_VALUES[TokenType::DECIMAL_SEPARATOR];
     bool foundDecimalSeparator = false;
     for (char c : trimmed) {
         if (std::isdigit(c)) {
             continue;
-        } else if (c == '.') {
+        } else if (std::string(1, c) == decimalSeparator) {
             if (foundDecimalSeparator) {
                 return false;
             }
