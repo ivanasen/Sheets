@@ -95,8 +95,8 @@ namespace SheetsCore {
             colStr += *(iterator++);
         }
 
-        unsigned long row = std::stoul(rowStr) + 1;
-        unsigned long col = std::stoul(colStr) + 1;
+        unsigned long row = std::stoul(rowStr) - 1;
+        unsigned long col = std::stoul(colStr) - 1;
         return std::make_pair(row, col);
     }
 

@@ -6,7 +6,7 @@
 
 namespace SheetsCore {
 
-    std::string TableFormulaCalculator::calculateFormula(const std::string &formula) {
+    std::string TableFormulaCalculator::calculateFormula(const std::string &formula, const Table &table) {
         std::vector<Token> tokens = tokenizeFormula(formula);
 
         //Make sure formula is correct
@@ -14,7 +14,7 @@ namespace SheetsCore {
         //Make sure there are no recursive calls
 
         //Calculate...
-        double result = evaluateFormula(tokens);
+        double result = evaluateFormula(tokens, table);
 
         return std::to_string(result);
     }
@@ -83,42 +83,46 @@ namespace SheetsCore {
         return matches;
     }
 
-    double TableFormulaCalculator::evaluateFormula(const std::vector<Token> &tokens) {
+    double TableFormulaCalculator::evaluateFormula(const std::vector<Token> &tokens, const Table &table) {
         std::vector<unsigned long> bracketMatches = matchBrackets(tokens);
-        return evaluateFormula(tokens, bracketMatches, 0, tokens.size() - 1);
+        return evaluateFormula(tokens, table, bracketMatches, 0, tokens.size() - 1);
     }
 
     double TableFormulaCalculator::evaluateFormula(
             const std::vector<Token> &formula,
+            const Table &table,
             std::vector<unsigned long> &bracketMatches,
             unsigned long startIndex,
             unsigned long endIndex) {
         if (formula[endIndex] == TOKEN_VALUES[TokenType::CLOSING_PARENTHESIS] &&
             bracketMatches[endIndex] == startIndex) {
-            return evaluateFormula(formula, bracketMatches, startIndex + 1, endIndex - 1);
+            return evaluateFormula(formula, table, bracketMatches, startIndex + 1, endIndex - 1);
         }
 
         if (startIndex == endIndex) {
-            return evaluateToken(formula[startIndex]);
+            return evaluateToken(formula[startIndex], table);
         }
 
         long splitIndex = findExpressionSplitIndex(formula, bracketMatches, startIndex, endIndex);
 
-        double leftResult = evaluateFormula(formula, bracketMatches, startIndex, splitIndex - 1);
-        double rightResult = evaluateFormula(formula, bracketMatches, splitIndex + 1, endIndex);
+        double leftResult = evaluateFormula(formula, table, bracketMatches, startIndex, splitIndex - 1);
+        double rightResult = evaluateFormula(formula, table, bracketMatches, splitIndex + 1, endIndex);
 
         double result = ArithmeticFormulasUtils::applyOperator(leftResult, rightResult, formula[splitIndex]);
 
         return result;
     }
 
-    double TableFormulaCalculator::evaluateToken(const Token &token) {
+    double TableFormulaCalculator::evaluateToken(const Token &token, const Table &table) {
         if (token.type == TokenType::NUMBER) {
             return std::stod(token.value);
         } else if (token.type == TokenType::STRING) {
             return 0;
         } else if (token.type == TokenType::IDENTIFIER) {
-            //Get identifier value
+            std::string cellValue = table.getCellValue(token.value);
+            if (StringUtils::isDecimal(cellValue)) {
+                return std::stod(cellValue);
+            }
             return 0;
         }
         return 0;
@@ -147,18 +151,4 @@ namespace SheetsCore {
         return splitIndex;
     }
 
-//double evaluateValue(const std::string &value, const Table &table) {
-//    //If value is a literal return
-//
-//    //if value is number or string from table return value
-//
-//    //if value is a formula check for dependencies in table:
-//        //1. Get all variables from formula
-//        //2. Check if current variable persists in that formula
-//        //  2.1. If yes then throw exception
-//        //  2.2. If no then traverse by dfs all other potential formulas
-//        //  2.3. If current formula is not present in all other dependant formulas then OK, else throw
-//        //3. Return value
-//
-//}
 }

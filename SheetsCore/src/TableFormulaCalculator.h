@@ -8,22 +8,23 @@ namespace SheetsCore {
 
     class TableFormulaCalculator {
     public:
-        static std::string calculateFormula(const std::string &formula);
+        static std::string calculateFormula(const std::string &formula, const Table &table);
 
         static std::vector<Token> tokenizeFormula(const std::string &formula);
 
         static std::vector<unsigned long> matchBrackets(const std::vector<Token> &formula);
 
-        static double evaluateFormula(const std::vector<Token> &tokens);
+        static double evaluateFormula(const std::vector<Token> &tokens, const Table &table);
 
         static double
         evaluateFormula(
                 const std::vector<Token> &formula,
+                const Table &table,
                 std::vector<unsigned long> &bracketMatches,
                 unsigned long startIndex,
                 unsigned long endIndex);
 
-        static double evaluateToken(const Token &token);
+        static double evaluateToken(const Token &token, const Table &table);
 
         static long
         findExpressionSplitIndex(
@@ -33,8 +34,6 @@ namespace SheetsCore {
                 long endIndex);
 
     private:
-        Table table;
-
         static void _requireValidFormat(std::vector<std::string> formula);
     };
 

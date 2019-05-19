@@ -17,7 +17,7 @@ namespace SheetsCore {
         TableCell cell = _cells[row][col];
 
         if (cell.getType() == CellType::FORMULA) {
-            return TableFormulaCalculator::calculateFormula(cell.getValue());
+            return TableFormulaCalculator::calculateFormula(cell.getValue(), *this);
         }
 
         return _cells[row][col].getValue();
@@ -68,11 +68,16 @@ namespace SheetsCore {
         return result;
     }
 
-    void Table::setCellValue(const std::string &cellIdentifier, const std::string &cellValue) {
+    void Table::setCellValue(const std::string &identifier, const std::string &cellValue) {
         std::pair<unsigned long, unsigned long> rowAndCol =
-                ArithmeticFormulasUtils::convertFromIdentifierToRowAndCol(cellIdentifier);
+                ArithmeticFormulasUtils::convertFromIdentifierToRowAndCol(identifier);
         setCellValue(rowAndCol.first, rowAndCol.second, cellValue);
     }
 
-}
+    std::string Table::getCellValue(const std::string &identifier) const {
+        std::pair<unsigned long, unsigned long> rowAndCol =
+                ArithmeticFormulasUtils::convertFromIdentifierToRowAndCol(identifier);
+        return getCellValue(rowAndCol.first, rowAndCol.second);
+    }
 
+}
