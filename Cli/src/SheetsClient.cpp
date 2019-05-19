@@ -22,4 +22,8 @@ namespace Cli {
             Log::i("Unknown command: " + input);
         }
     }
+
+    SheetsClient::SheetsClient() : Client() {
+        setQuitMessage("Exiting Sheets...");
+    }
 }

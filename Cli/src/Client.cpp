@@ -20,7 +20,7 @@ namespace Cli {
             std::cout << _cmdPrefix;
         } while (input != _quitCmd);
 
-        std::cout << "Exiting the program...";
+        std::cout << _quitMsg << std::endl;
     }
 
     void Client::setCommandPrefix(const std::string &cmdPrefix) {
@@ -35,15 +35,28 @@ namespace Cli {
         return "> ";
     }
 
-    std::string Client::DEFAULT_QUIT_CMD() {
+    std::string Client::DEFAULT_QUIT_COMMAND() {
         return "exit";
     }
 
-    Client::Client() : _cmdPrefix(DEFAULT_CMD_PREFIX()), _quitCmd(DEFAULT_QUIT_CMD()) {
+    std::string Client::DEFAULT_QUIT_MESSAGE() {
+        return "Exiting the program...";
     }
 
-    Client::Client(std::string commandPrefix, std::string quitCommand)
-            : _cmdPrefix(std::move(commandPrefix)), _quitCmd(std::move(quitCommand)) {
+    Client::Client()
+            : _cmdPrefix(DEFAULT_CMD_PREFIX()), _quitCmd(DEFAULT_QUIT_COMMAND()), _quitMsg(DEFAULT_QUIT_MESSAGE()) {
+    }
+
+    Client::Client(std::string commandPrefix, std::string quitCommand, std::string quitMessage)
+            : _cmdPrefix(std::move(commandPrefix)), _quitCmd(std::move(quitCommand)), _quitMsg(std::move(quitMessage)) {
+    }
+
+    void Client::setQuitMessage(const std::string &quitMessage) {
+        _quitMsg = quitMessage;
+    }
+
+    std::string Client::getExitMessage() {
+        return _quitMsg;
     }
 
 }

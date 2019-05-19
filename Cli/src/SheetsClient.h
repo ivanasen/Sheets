@@ -8,6 +8,8 @@ namespace Cli {
 
     class SheetsClient : public Client {
     public:
+        SheetsClient();
+
         static void init();
 
     private:
