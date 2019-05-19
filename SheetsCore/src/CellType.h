@@ -1,8 +1,9 @@
 #pragma once
 
-
-enum class CellType {
-    INTEGER, DECIMAL, FORMULA, STRING
-};
+namespace SheetsCore {
+    enum class CellType {
+        INTEGER, DECIMAL, FORMULA, STRING
+    };
+}
 
 

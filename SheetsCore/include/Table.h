@@ -6,16 +6,23 @@
 #include "TableCell.h"
 #include "../src/TableCellParser.h"
 
-class Table {
-public:
-    Table(unsigned initialHeight, unsigned initialWidth);
+namespace SheetsCore {
+    class Table {
+    public:
+        static const int DEFAULT_INITIAL_HEIGHT = 10;
+        static const int DEFAULT_INITIAL_WIDTH = 10;
 
-    std::string getCellValue(unsigned row, unsigned col) const;
+        Table();
 
-    void setCellValue(unsigned row, unsigned col, const std::string &cellValue);
+        Table(unsigned initialHeight, unsigned initialWidth);
 
-private:
-    std::vector<std::vector<TableCell>> _tableValues;
+        std::string getCellValue(unsigned row, unsigned col) const;
 
-    void _resizeIfNeeded(unsigned requiredHeight, unsigned requiredWidth);
-};
+        void setCellValue(unsigned row, unsigned col, const std::string &cellValue);
+
+    private:
+        std::vector<std::vector<TableCell>> _tableValues;
+
+        void _resizeIfNeeded(unsigned requiredHeight, unsigned requiredWidth);
+    };
+}

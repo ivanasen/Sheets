@@ -1,8 +1,10 @@
 #pragma once
 
-
-class TableFormulaParser {
-
-};
+namespace SheetsCore {
 
 
+    class TableFormulaParser {
+
+    };
+
+}

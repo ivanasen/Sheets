@@ -3,17 +3,20 @@
 #include <string>
 #include "../src/CellType.h"
 
-class TableCell {
-public:
-    TableCell();
+namespace SheetsCore {
+    class TableCell {
+    public:
+        TableCell();
 
-    explicit TableCell(CellType type, std::string value);
+        explicit TableCell(CellType type, std::string value);
 
-    std::string getValue() const;
+        std::string getValue() const;
 
-    CellType getType() const;
+        CellType getType() const;
 
-private:
-    std::string _value;
-    CellType _type;
-};
+    private:
+        std::string _value;
+        CellType _type;
+    };
+}
+

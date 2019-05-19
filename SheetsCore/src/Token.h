@@ -3,13 +3,17 @@
 #include <string>
 #include "TokenType.h"
 
-struct Token {
-    Token();
+namespace SheetsCore {
 
-    Token(TokenType type, std::string value);
 
-    TokenType type;
-    std::string value;
+    struct Token {
+        Token();
 
-    bool operator ==(const Token &other) const;
-};
+        Token(TokenType type, std::string value);
+
+        TokenType type;
+        std::string value;
+
+        bool operator==(const Token &other) const;
+    };
+}

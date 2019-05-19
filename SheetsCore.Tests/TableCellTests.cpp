@@ -2,6 +2,8 @@
 #include <TableCell.h>
 #include "../SheetsCore/src/TableCellParser.h"
 
+using namespace SheetsCore;
+
 TEST_CASE("TableCell works correctly", "[TableCell]") {
     std::string value = "Pesho";
     TableCell cell(CellType::STRING, value);
