@@ -3,7 +3,7 @@ project(SheetsCore)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(SOURCE_FILES src/Table.cpp include/Table.h src/CellType.h src/TableCellParser.cpp src/TableCellParser.h src/StringUtils.cpp src/TableFormulaCalculator.cpp src/TableFormulaCalculator.h src/TokenType.h src/TokenValues.h src/Token.cpp src/Token.h src/TableFormula.cpp src/TableFormula.h src/TableFormulaParser.cpp src/TableFormulaParser.h src/Constants.cpp src/TableCell.cpp src/ArithmeticFormulasUtils.cpp src/ArithmeticFormulasUtils.h src/StringUtils.h)
+set(SOURCE_FILES src/Table.cpp include/Table.h src/CellType.h src/TableCellParser.cpp src/TableCellParser.h src/StringUtils.cpp src/TableFormulaCalculator.cpp src/TableFormulaCalculator.h src/TokenType.h src/TokenValues.h src/Token.cpp src/Token.h src/TableFormula.cpp src/TableFormula.h src/TableFormulaParser.cpp src/TableFormulaParser.h src/Constants.cpp src/TableCell.cpp src/ArithmeticFormulasUtils.cpp src/ArithmeticFormulasUtils.h src/StringUtils.h src/FormulaTableCell.cpp src/FormulaTableCell.h)
 
 include_directories(${PROJECT_SOURCE_DIR}/include/)
 

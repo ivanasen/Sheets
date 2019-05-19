@@ -19,6 +19,7 @@ TEST_CASE("Table resizes when which is out of current bounds is set", "[Table]")
     REQUIRE(expected == table.getCellValue(1000, 1000));
 }
 
+
 TEST_CASE("Table can do simple arithmetic formulas", "[Table]") {
     std::string formula = "= 3 + 5";
     double expected = 8;

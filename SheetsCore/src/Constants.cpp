@@ -2,10 +2,12 @@
 #include "TokenValues.h"
 
 namespace SheetsCore {
-    static std::regex TABLE_CELL_FORMAT(
+    static const std::regex TABLE_CELL_FORMAT(
             "^"
             + TOKEN_VALUES[TokenType::ROW].value +
             "[0-9]+"
             + TOKEN_VALUES[TokenType::COLUMN].value +
             "[0-9]+$");
+
+    static const std::string ERROR_TABLE_CELL_VALUE = "ERROR";
 }

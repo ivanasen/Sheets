@@ -3,6 +3,8 @@
 #include "StringUtils.h"
 #include "ArithmeticFormulasUtils.h"
 #include "TokenValues.h"
+#include "Constants.cpp"
+#include "FormulaTableCell.h"
 #include <iostream>
 
 namespace SheetsCore {
@@ -10,21 +12,21 @@ namespace SheetsCore {
     const int Table::DEFAULT_INITIAL_WIDTH = 10;
 
     std::string Table::getCellValue(unsigned row, unsigned col) const {
-        if (row > _cells.size() - 1 || (!_cells.empty() && col > _cells[0].size() - 1)) {
+        if (row > _cells.size() - 1
+            || (!_cells.empty() && col > _cells[0].size() - 1)
+            || _cells[row][col] == nullptr) {
             return "";
         }
 
-        TableCell cell = _cells[row][col];
-
-        if (cell.getType() == CellType::FORMULA) {
-            return TableFormulaCalculator::calculateFormula(cell.getValue(), *this);
+        try {
+            return _cells[row][col]->getValue();
+        } catch (const std::invalid_argument &e) {
+            return ERROR_TABLE_CELL_VALUE;
         }
-
-        return _cells[row][col].getValue();
     }
 
     Table::Table(unsigned initialHeight, unsigned initialWidth)
-            : _cells(initialHeight, std::vector<TableCell>(initialWidth)) {
+            : _cells(initialHeight, std::vector<std::shared_ptr<TableCell>>(initialWidth)) {
     }
 
     void Table::setCellValue(unsigned row, unsigned col, const std::string &cellValue) {
@@ -33,10 +35,10 @@ namespace SheetsCore {
         TableCell newCell = TableCellParser::parse(cellValue);
 
         if (newCell.getType() == CellType::FORMULA) {
-            //TODO: Evaluate formula
+            _cells[row][col] = std::make_shared<FormulaTableCell>(newCell.getValue(), *this);
+        } else {
+            _cells[row][col] = std::make_shared<TableCell>(newCell);
         }
-
-        _cells[row][col] = newCell;
     }
 
     void Table::_resizeIfNeeded(unsigned requiredHeight, unsigned requiredWidth) {
@@ -45,7 +47,7 @@ namespace SheetsCore {
         }
 
         if ((_cells.empty() && requiredWidth > 0) || requiredWidth > _cells[0].size()) {
-            for (std::vector<TableCell> &row : _cells) {
+            for (std::vector<std::shared_ptr<TableCell>> &row : _cells) {
                 row.resize(requiredWidth);
             }
         }
@@ -78,6 +80,10 @@ namespace SheetsCore {
         std::pair<unsigned long, unsigned long> rowAndCol =
                 ArithmeticFormulasUtils::convertFromIdentifierToRowAndCol(identifier);
         return getCellValue(rowAndCol.first, rowAndCol.second);
+    }
+
+    const TableCell &Table::getCell(unsigned row, unsigned col) const {
+        return *_cells[row][col];
     }
 
 }

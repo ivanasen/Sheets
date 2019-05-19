@@ -16,6 +16,8 @@ namespace SheetsCore {
 
         static Token getArithmeticOperatorToken(const std::string &s);
 
+        static Token getArithmeticOperatorToken(char c);
+
         static int getOperatorPrecedence(TokenType token);
 
         static int getOperatorPrecedence(const Token &token);
@@ -23,5 +25,13 @@ namespace SheetsCore {
         static double applyOperator(double &leftOperand, double &rightOperand, const Token &op);
 
         static std::pair<unsigned long, unsigned long> convertFromIdentifierToRowAndCol(std::string identifier);
+
+        static bool isOperator(char c);
+
+        static Token extractPotentialNumberToken(std::string s);
+
+        static Token extractStringToken(std::string s);
+
+        static Token extractPotentialIdentifierToken(std::string s);
     };
 }

@@ -21,6 +21,10 @@ namespace SheetsCore {
                s == TOKEN_VALUES[TokenType::DIVISION].value;
     }
 
+    bool ArithmeticFormulasUtils::isOperator(char c) {
+        return isOperator(std::string(1, c));
+    }
+
     bool ArithmeticFormulasUtils::isOperator(const TokenType &t) {
         return t == TokenType::PLUS ||
                t == TokenType::MINUS ||
@@ -40,6 +44,10 @@ namespace SheetsCore {
         } else {
             throw std::invalid_argument("\"s\" is not an arithmetic operator");
         }
+    }
+
+    Token ArithmeticFormulasUtils::getArithmeticOperatorToken(char c) {
+        return getArithmeticOperatorToken(std::string(1, c));
     }
 
     int ArithmeticFormulasUtils::getOperatorPrecedence(TokenType token) {
@@ -98,6 +106,61 @@ namespace SheetsCore {
         unsigned long row = std::stoul(rowStr) - 1;
         unsigned long col = std::stoul(colStr) - 1;
         return std::make_pair(row, col);
+    }
+
+    Token ArithmeticFormulasUtils::extractPotentialNumberToken(std::string s) {
+        std::string result;
+        char decimalSeparator = TOKEN_VALUES[TokenType::DECIMAL_SEPARATOR].value[0];
+        char closingParenthesis = TOKEN_VALUES[TokenType::CLOSING_PARENTHESIS].value[0];
+
+        bool foundDecimalSeparator = false;
+        bool isNumber = true;
+
+        std::string::iterator it = s.begin();
+
+        while (it < s.end() && !std::isspace(*it) && *it != closingParenthesis) {
+            if (*it == decimalSeparator) {
+                if (foundDecimalSeparator) {
+                    isNumber = false;
+                }
+
+                foundDecimalSeparator = true;
+            } else if (!std::isdigit(*it)) {
+                isNumber = false;
+            }
+
+            result += *(it++);
+        }
+
+        if (isNumber) {
+            return Token(TokenType::NUMBER, result);
+        }
+
+        return Token(TokenType::STRING, result);
+    }
+
+    Token ArithmeticFormulasUtils::extractPotentialIdentifierToken(std::string s) {
+        std::string result;
+        std::string::iterator it = s.begin();
+
+        Token stringToken = extractStringToken(s);
+
+        if (isTableCellIdentifier(stringToken.value)) {
+            return Token(TokenType::IDENTIFIER, stringToken.value);
+        } else {
+            return stringToken;
+        }
+    }
+
+    Token ArithmeticFormulasUtils::extractStringToken(std::string s) {
+        std::string result;
+        std::string::iterator it = s.begin();
+
+        while (it < s.end() && !std::isspace(*it)) {
+            result += *(it++);
+        }
+
+        return Token(TokenType::STRING, result);
     }
 
 }

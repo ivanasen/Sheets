@@ -83,21 +83,27 @@ namespace Cli {
         std::string trimmed = s;
         StringUtils::trimString(trimmed);
 
-        std::string decimalSeparator = Constants::DECIMAL_SEPARATOR;
+        char decimalSeparator = Constants::DECIMAL_SEPARATOR;
         bool foundDecimalSeparator = false;
-        for (char c : trimmed) {
-            if (std::isdigit(c)) {
-                continue;
-            } else if (std::string(1, c) == decimalSeparator) {
+
+        std::string::const_iterator it = trimmed.begin();
+        if (*it == '-') {
+            it++;
+        }
+
+        while (it < trimmed.end()) {
+            if (*it == decimalSeparator) {
                 if (foundDecimalSeparator) {
                     return false;
                 }
                 foundDecimalSeparator = true;
-            } else {
+            } else if (!std::isdigit(*it)) {
                 return false;
             }
+            it++;
         }
-        return !s.empty();
+
+        return !trimmed.empty();
     }
 
 }

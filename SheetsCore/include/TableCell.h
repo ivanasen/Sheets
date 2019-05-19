@@ -10,9 +10,13 @@ namespace SheetsCore {
 
         explicit TableCell(CellType type, std::string value);
 
-        std::string getValue() const;
+        TableCell(const TableCell &tableCell);
+
+        virtual std::string getValue();
 
         CellType getType() const;
+
+        virtual ~TableCell() = default;
 
     private:
         std::string _value;

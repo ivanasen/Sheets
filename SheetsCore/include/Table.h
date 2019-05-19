@@ -20,6 +20,8 @@ namespace SheetsCore {
 
         std::string getCellValue(const std::string &identifier) const;
 
+        const TableCell &getCell(unsigned row, unsigned col) const;
+
         std::vector<std::vector<std::string>> getAllCellValues() const;
 
         void setCellValue(unsigned row, unsigned col, const std::string &cellValue);
@@ -27,7 +29,7 @@ namespace SheetsCore {
         void setCellValue(const std::string &identifier, const std::string &cellValue);
 
     private:
-        std::vector<std::vector<TableCell>> _cells;
+        std::vector<std::vector<std::shared_ptr<TableCell>>> _cells;
 
         void _resizeIfNeeded(unsigned requiredHeight, unsigned requiredWidth);
     };
