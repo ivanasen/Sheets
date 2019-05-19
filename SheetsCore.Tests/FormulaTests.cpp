@@ -30,6 +30,15 @@ TEST_CASE("tokenizeFormula", "[TableFormulaCalculator]") {
 TEST_CASE("matchBrackets", "[TableFormulaCalculator]") {
     std::string f1 = "= 3 + 5";
     std::vector<Token> tokens1 = TableFormulaCalculator::tokenizeFormula(f1);
-    std::vector<unsigned long> matches = TableFormulaCalculator::matchBrackets(tokens1);
-    bool p = false;
+    std::vector<unsigned long> matches1 = TableFormulaCalculator::matchBrackets(tokens1);
+    for (const unsigned long &match : matches1) {
+        REQUIRE(0 == match);
+    }
+
+    std::string f2 = "= ( 3 + 5 ) - 34 * ( 23 + 0 * ( 4 ) )";
+    std::vector<Token> tokens2 = TableFormulaCalculator::tokenizeFormula(f2);
+    std::vector<unsigned long> matches2 = TableFormulaCalculator::matchBrackets(tokens2);
+    REQUIRE(0 == matches2[4]);
+    REQUIRE(13 == matches2[15]);
+    REQUIRE(8 == matches2[16]);
 }
