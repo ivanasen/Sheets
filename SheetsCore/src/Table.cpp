@@ -1,5 +1,7 @@
 #include "Table.h"
-#include "FormulaCalculator.h"
+#include "TableFormulaCalculator.h"
+#include "Log.h"
+#include <iostream>
 
 std::string Table::getCellValue(unsigned row, unsigned col) const {
     if (row > _tableValues.size() - 1 || col > _tableValues.size() - 1) {
@@ -9,7 +11,7 @@ std::string Table::getCellValue(unsigned row, unsigned col) const {
     TableCell cell = _tableValues[row][col];
 
     if (cell.getType() == CellType::FORMULA) {
-        return FormulaCalculator::calculateFormula(cell.getValue(), *this);
+        return TableFormulaCalculator::calculateFormula(cell.getValue());
     }
 
     return _tableValues[row][col].getValue();
@@ -22,7 +24,12 @@ Table::Table(unsigned initialHeight, unsigned initialWidth)
 void Table::setCellValue(unsigned row, unsigned col, const std::string &cellValue) {
     _resizeIfNeeded(row + 1, col + 1);
 
-    TableCell newCell = _cellParser.parse(cellValue);
+    TableCell newCell = TableCellParser::parse(cellValue);
+
+    if (newCell.getType() == CellType::FORMULA) {
+        //TODO: Evaluate formula
+    }
+
     _tableValues[row][col] = newCell;
 }
 

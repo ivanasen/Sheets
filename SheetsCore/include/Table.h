@@ -16,7 +16,6 @@ public:
 
 private:
     std::vector<std::vector<TableCell>> _tableValues;
-    TableCellParser _cellParser;
 
     void _resizeIfNeeded(unsigned requiredHeight, unsigned requiredWidth);
 };

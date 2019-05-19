@@ -10,5 +10,9 @@ enum class TokenType {
     MULTIPLICATION,
     DIVISION,
     IDENTIFIER,
-    EQUAL
+    STRING,
+    NUMBER,
+    EQUAL,
+    ROW,
+    COLUMN
 };
