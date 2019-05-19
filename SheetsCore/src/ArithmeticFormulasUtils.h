@@ -21,5 +21,7 @@ namespace SheetsCore {
         static int getOperatorPrecedence(const Token &token);
 
         static double applyOperator(double &leftOperand, double &rightOperand, const Token &op);
+
+        static std::pair<unsigned long, unsigned long> convertFromIdentifierToRowAndCol(std::string identifier);
     };
 }

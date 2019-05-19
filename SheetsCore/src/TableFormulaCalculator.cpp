@@ -1,7 +1,8 @@
 #include "TableFormulaCalculator.h"
 #include "TokenValues.h"
-#include "StringUtils.cpp"
+#include "StringUtils.h"
 #include "ArithmeticFormulasUtils.h"
+#include <stack>
 
 namespace SheetsCore {
 
@@ -19,7 +20,7 @@ namespace SheetsCore {
     }
 
     std::vector<Token> TableFormulaCalculator::tokenizeFormula(const std::string &formula) {
-        std::vector<std::string> separated = splitBySpaces(formula);
+        std::vector<std::string> separated = StringUtils::splitBySpaces(formula);
         _requireValidFormat(separated);
 
         //Remove equals sign
@@ -28,7 +29,7 @@ namespace SheetsCore {
         std::vector<Token> tokens;
 
         for (const std::string &s : separated) {
-            if (isInteger(s) || isDecimal(s)) {
+            if (StringUtils::isInteger(s) || StringUtils::isDecimal(s)) {
                 tokens.emplace_back(TokenType::NUMBER, s);
             } else if (ArithmeticFormulasUtils::isTableCellIdentifier(s)) {
                 tokens.emplace_back(TokenType::IDENTIFIER, s);

@@ -1,5 +1,5 @@
 #include <catch.hpp>
-#include "../SheetsCore/src/StringUtils.cpp"
+#include "../SheetsCore/src/StringUtils.h"
 #include "../SheetsCore/src/TableFormulaCalculator.h"
 #include "../SheetsCore/src/Token.h"
 

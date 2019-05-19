@@ -1,9 +1,9 @@
-
 #include <regex>
 #include <string>
 #include "Constants.cpp"
 #include "TokenValues.h"
 #include "ArithmeticFormulasUtils.h"
+#include "StringUtils.h"
 
 namespace SheetsCore {
     bool ArithmeticFormulasUtils::isTableCellIdentifier(const std::string &s) {
@@ -70,4 +70,34 @@ namespace SheetsCore {
             throw std::invalid_argument("Invalid operator: \"" + op.value + "\"");
         }
     }
+
+    std::pair<unsigned long, unsigned long>
+    ArithmeticFormulasUtils::convertFromIdentifierToRowAndCol(std::string identifier) {
+        StringUtils::trim(identifier);
+
+        if (!ArithmeticFormulasUtils::isTableCellIdentifier(identifier)) {
+            throw std::invalid_argument("Invalid table cell identifier: \"" + identifier + "\"");
+        }
+
+        std::string rowToken = TOKEN_VALUES[TokenType::ROW].value;
+        std::string colToken = TOKEN_VALUES[TokenType::COLUMN].value;
+
+        std::string rowStr;
+        std::string colStr;
+
+        std::string::iterator iterator = identifier.begin() + rowToken.size();
+
+        while (iterator < identifier.end() && std::isdigit(*iterator)) {
+            rowStr += *(iterator++);
+        }
+        iterator += colToken.size();
+        while (iterator < identifier.end() && std::isdigit(*iterator)) {
+            colStr += *(iterator++);
+        }
+
+        unsigned long row = std::stoul(rowStr) + 1;
+        unsigned long col = std::stoul(colStr) + 1;
+        return std::make_pair(row, col);
+    }
+
 }

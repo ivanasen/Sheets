@@ -19,6 +19,8 @@ namespace Cli {
             }
             std::cout << _cmdPrefix;
         } while (input != _quitCmd);
+
+        std::cout << "Exiting the program...";
     }
 
     void Client::setCommandPrefix(const std::string &cmdPrefix) {
@@ -34,7 +36,7 @@ namespace Cli {
     }
 
     std::string Client::DEFAULT_QUIT_CMD() {
-        return "quit";
+        return "exit";
     }
 
     Client::Client() : _cmdPrefix(DEFAULT_CMD_PREFIX()), _quitCmd(DEFAULT_QUIT_CMD()) {

@@ -8,3 +8,5 @@ set(SOURCE_FILES src/Table.cpp include/Table.h src/CellType.h src/TableCellParse
 include_directories(${PROJECT_SOURCE_DIR}/include/)
 
 add_library(SheetsCore STATIC ${SOURCE_FILES})
+
+target_include_directories(SheetsCore INTERFACE ${PROJECT_SOURCE_DIR}/include/)
