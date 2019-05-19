@@ -9,8 +9,8 @@
 namespace SheetsCore {
     class Table {
     public:
-        static const int DEFAULT_INITIAL_HEIGHT = 10;
-        static const int DEFAULT_INITIAL_WIDTH = 10;
+        static const int DEFAULT_INITIAL_HEIGHT = 100;
+        static const int DEFAULT_INITIAL_WIDTH = 100;
 
         Table();
 
