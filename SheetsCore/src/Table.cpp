@@ -1,25 +1,25 @@
 #include "Table.h"
-#include "StringUtils.h"
+#include <Strings.h>
 #include "ArithmeticFormulasUtils.h"
 #include "TokenValues.h"
-#include "Constants.cpp"
 #include "FormulaTableCell.h"
-#include "TableCellRangeException.h"
-#include <iostream>
+#include "exceptions/TableCellRangeException.h"
 
 namespace SheetsCore {
     const size_t Table::DEFAULT_INITIAL_HEIGHT = 10;
     const size_t Table::DEFAULT_INITIAL_WIDTH = 10;
     const size_t Table::MAX_SIZE = 1000;
+    const std::string Table::EMPTY_CELL_VALUE;
+    const std::string Table::ERROR_TABLE_CELL_VALUE = "Error";
 
     std::string Table::getCellValue(const TableCellPosition &position) const {
         size_t row = position.getRow();
         size_t col = position.getColumn();
 
-        if (row > _cells.size() - 1
-            || (!_cells.empty() && col > _cells[0].size() - 1)
+        if (row >= _cells.size()
+            || (!_cells.empty() && col >= _cells[0].size())
             || _cells[row][col] == nullptr) {
-            return "";
+            return EMPTY_CELL_VALUE;
         }
 
         try {
@@ -37,7 +37,7 @@ namespace SheetsCore {
         size_t row = position.getRow();
         size_t col = position.getColumn();
 
-        _resizeIfNeeded(row + 1, col + 1);
+        _resizeIfNotBigEnough(row + 1, col + 1);
 
         CellType newCellType = _determineCellType(newCellValue);
 
@@ -48,19 +48,18 @@ namespace SheetsCore {
         }
     }
 
-    void Table::_resizeIfNeeded(size_t requiredHeight, size_t requiredWidth) {
-        if (requiredHeight > MAX_SIZE || requiredWidth > MAX_SIZE) {
+    void Table::_resizeIfNotBigEnough(size_t height, size_t width) {
+        if (height > MAX_SIZE || width > MAX_SIZE) {
             throw TableCellRangeException();
         }
 
-
-        if (requiredHeight > _cells.size()) {
-            _cells.resize(requiredHeight);
+        if (height > _cells.size()) {
+            _cells.resize(height);
         }
 
-        if ((_cells.empty() && requiredWidth > 0) || requiredWidth > _cells[0].size()) {
+        if ((_cells.empty() && width > 0) || width > _cells[0].size()) {
             for (std::vector<TableCell *> &row : _cells) {
-                row.resize(requiredWidth);
+                row.resize(width);
             }
         }
     }
@@ -87,9 +86,9 @@ namespace SheetsCore {
     }
 
     CellType Table::_determineCellType(const std::string &cellValue) {
-        if (StringUtils::isInteger(cellValue)) {
+        if (Utils::Strings::isInteger(cellValue)) {
             return CellType::INTEGER;
-        } else if (StringUtils::isDecimal(cellValue)) {
+        } else if (Utils::Strings::isDecimal(cellValue)) {
             return CellType::DECIMAL;
         } else if (ArithmeticFormulasUtils::isFormula(cellValue)) {
             return CellType::FORMULA;

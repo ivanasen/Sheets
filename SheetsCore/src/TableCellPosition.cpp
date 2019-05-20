@@ -2,12 +2,20 @@
 #include <stdexcept>
 #include <Table.h>
 #include "TableCellPosition.h"
-#include "StringUtils.h"
+#include <Strings.h>
+#include <regex>
 #include "ArithmeticFormulasUtils.h"
 #include "TokenValues.h"
-#include "TableCellRangeException.h"
+#include "exceptions/TableCellRangeException.h"
 
 namespace SheetsCore {
+
+    const std::regex TableCellPosition::TABLE_CELL_FORMAT(
+            "^"
+            + TOKEN_VALUES[(int) TokenType::ROW].value +
+            "[0-9]+"
+            + TOKEN_VALUES[(int) TokenType::COLUMN].value +
+            "[0-9]+$");
 
     TableCellPosition::TableCellPosition(size_t row, size_t column)
             : _row(row), _column(column) {
@@ -18,9 +26,9 @@ namespace SheetsCore {
     }
 
     TableCellPosition::TableCellPosition(std::string identifier) {
-        StringUtils::trim(identifier);
+        Utils::Strings::trim(identifier);
 
-        if (!ArithmeticFormulasUtils::isTableCellIdentifier(identifier)) {
+        if (!isTableCellIdentifier(identifier)) {
             throw std::invalid_argument("Invalid table cell identifier: \"" + identifier + "\"");
         }
 
@@ -63,5 +71,9 @@ namespace SheetsCore {
 
     size_t TableCellPosition::getColumn() const {
         return _column;
+    }
+
+    bool TableCellPosition::isTableCellIdentifier(const std::string &s) {
+        return std::regex_match(s, TABLE_CELL_FORMAT);
     }
 }

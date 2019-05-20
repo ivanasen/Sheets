@@ -5,7 +5,6 @@
 
 namespace SheetsCore {
 
-
     struct Token {
         Token();
 
@@ -16,4 +15,5 @@ namespace SheetsCore {
 
         bool operator==(const Token &other) const;
     };
+
 }

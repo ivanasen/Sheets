@@ -1,15 +1,11 @@
 #include <string>
 #include <vector>
-#include "TokenType.h"
-#include "Token.h"
-#include "TokenValues.h"
-#include "Constants.cpp"
-#include "ArithmeticFormulasUtils.h"
-#include "StringUtils.h"
+#include <algorithm>
+#include "Strings.h"
 
-namespace SheetsCore {
+namespace Utils {
 
-    void StringUtils::ltrim(std::string &string) {
+    void Strings::ltrim(std::string &string) {
         std::string::iterator endTrimPosition = string.begin();
 
         while (std::isspace(*endTrimPosition)) {
@@ -19,7 +15,7 @@ namespace SheetsCore {
         string.erase(string.begin(), endTrimPosition);
     }
 
-    void StringUtils::rtrim(std::string &string) {
+    void Strings::rtrim(std::string &string) {
         std::string::iterator endTrimPosition = string.end() - 1;
         while (std::isspace(*endTrimPosition)) {
             endTrimPosition--;
@@ -29,12 +25,12 @@ namespace SheetsCore {
         }
     }
 
-    void StringUtils::trim(std::string &string) {
+    void Strings::trim(std::string &string) {
         ltrim(string);
         rtrim(string);
     }
 
-    std::vector<std::string> StringUtils::splitBySpaces(const std::string &string) {
+    std::vector<std::string> Strings::splitBySpaces(const std::string &string) {
         std::vector<std::string> separated;
         auto iterator = string.begin();
 
@@ -53,7 +49,7 @@ namespace SheetsCore {
         return separated;
     }
 
-    std::vector<std::string> StringUtils::split(const std::string &string, char separator) {
+    std::vector<std::string> Strings::split(const std::string &string, char separator) {
         std::vector<std::string> separated;
         auto iterator = string.begin();
 
@@ -72,7 +68,7 @@ namespace SheetsCore {
         return separated;
     }
 
-    bool StringUtils::isInteger(const std::string &s) {
+    bool Strings::isInteger(const std::string &s) {
         std::string trimmed = s;
         trim(trimmed);
 
@@ -84,16 +80,16 @@ namespace SheetsCore {
         return true;
     }
 
-    bool StringUtils::isDecimal(const std::string &s) {
+    bool Strings::isDecimal(const std::string &s) {
         std::string trimmed = s;
         trim(trimmed);
 
-        Token decimalSeparator = TOKEN_VALUES[(int) TokenType::DECIMAL_SEPARATOR];
+        char decimalSeparator = '.';
         bool foundDecimalSeparator = false;
         for (char c : trimmed) {
             if (std::isdigit(c)) {
                 continue;
-            } else if (std::string(1, c) == decimalSeparator.value) {
+            } else if (c == decimalSeparator) {
                 if (foundDecimalSeparator) {
                     return false;
                 }
@@ -103,6 +99,12 @@ namespace SheetsCore {
             }
         }
         return !s.empty();
+    }
+
+    std::string Strings::toLowerCase(std::string string) {
+        std::string copy = std::move(string);
+        std::transform(copy.begin(), copy.end(), copy.begin(), ::tolower);
+        return copy;
     }
 
 }

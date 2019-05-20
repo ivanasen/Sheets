@@ -3,9 +3,9 @@
 #include <string>
 #include <vector>
 
-namespace SheetsCore {
+namespace Utils {
 
-    class StringUtils {
+    class Strings {
     public:
         static void ltrim(std::string &string);
 
@@ -20,6 +20,8 @@ namespace SheetsCore {
         static bool isInteger(const std::string &s);
 
         static bool isDecimal(const std::string &s);
+
+        static std::string toLowerCase(std::string string);
     };
 
 }

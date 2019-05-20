@@ -2,10 +2,9 @@
 #include <stack>
 
 #include "FormulaTableCell.h"
-#include "StringUtils.h"
+#include "Strings.h"
 #include "ArithmeticFormulasUtils.h"
 #include "TokenValues.h"
-#include "Constants.cpp"
 #include <iostream>
 
 namespace SheetsCore {
@@ -136,26 +135,22 @@ namespace SheetsCore {
     }
 
     void FormulaTableCell::_requireValidFormat(const std::string &formula) const {
-        char equalsSign = TOKEN_VALUES[(int) TokenType::EQUAL].value[0];
-        if (formula[0] != equalsSign) {
+        if (!ArithmeticFormulasUtils::isFormula(formula)) {
             throw std::invalid_argument("Invalid formula: \"" + formula + "\"");
         }
     }
 
-
     double FormulaTableCell::_evaluateToken(const Token &token) {
-        if (token.type == TokenType::NUMBER) {
-            return std::stod(token.value);
-        } else if (token.type == TokenType::STRING) {
-            return 0;
-        } else if (token.type == TokenType::IDENTIFIER) {
-            std::string cellValue = _table.getCellValue(TableCellPosition(token.value));
-            if (StringUtils::isDecimal(cellValue)) {
-                return std::stod(cellValue);
-            }
-            return 0;
+        switch (token.type) {
+            case TokenType::NUMBER:
+                return std::stod(token.value);
+            case TokenType::STRING:
+                return 0;
+            case TokenType::IDENTIFIER:
+                return _getValueFromTable(token.value);
+            default:
+                throw std::invalid_argument("Unsupported token type");
         }
-        return 0;
     }
 
     long FormulaTableCell::_findExpressionSplitIndex(long startIndex, long endIndex) const {
@@ -183,13 +178,16 @@ namespace SheetsCore {
     }
 
     void FormulaTableCell::_requireNoTableCellConflicts(const FormulaTableCell &cell) {
-        std::vector<std::vector<size_t>> visited(_table.getHeight(), std::vector<size_t>(_table.getWidth()));
-        _requireNoTableCellConflicts(cell, visited);
+        std::vector<std::vector<size_t>> visitedCells(
+                _table.getHeight(),
+                std::vector<size_t>(_table.getWidth())
+        );
+        _requireNoTableCellConflicts(cell, visitedCells);
     }
 
     void FormulaTableCell::_requireNoTableCellConflicts(
             const FormulaTableCell &cell,
-            std::vector<std::vector<size_t>> &visited) {
+            std::vector<std::vector<size_t>> &visitedCells) {
         std::vector<TableCellPosition> cellPositions = cell.getContainedTableCellPositions();
 
         for (const TableCellPosition &pos : cellPositions) {
@@ -197,17 +195,25 @@ namespace SheetsCore {
                 throw std::invalid_argument("Formula cell can\'t reference itself");
             }
 
-            if (visited[pos.getRow()][pos.getColumn()]) {
+            if (visitedCells[pos.getRow()][pos.getColumn()]) {
                 return;
             }
 
-            visited[pos.getRow()][pos.getColumn()] = true;
+            visitedCells[pos.getRow()][pos.getColumn()] = true;
 
             const TableCell *containedCell = _table.getCell(pos);
             if (containedCell != nullptr && containedCell->getType() == CellType::FORMULA) {
                 FormulaTableCell formula = *((FormulaTableCell *) containedCell);
-                _requireNoTableCellConflicts(formula, visited);
+                _requireNoTableCellConflicts(formula, visitedCells);
             }
         }
+    }
+
+    double FormulaTableCell::_getValueFromTable(const std::string &cellIdentifier) {
+        std::string cellValue = _table.getCellValue(TableCellPosition(cellIdentifier));
+        if (Utils::Strings::isDecimal(cellValue)) {
+            return std::stod(cellValue);
+        }
+        return 0;
     }
 }

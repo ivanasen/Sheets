@@ -40,6 +40,8 @@ namespace SheetsCore {
 
         void _requireNoTableCellConflicts(const FormulaTableCell &cell);
 
-        void _requireNoTableCellConflicts(const FormulaTableCell &cell, std::vector<std::vector<size_t>> &visited);
+        void _requireNoTableCellConflicts(const FormulaTableCell &cell, std::vector<std::vector<size_t>> &visitedCells);
+
+        double _getValueFromTable(const std::string &cellIdentifier);
     };
 }

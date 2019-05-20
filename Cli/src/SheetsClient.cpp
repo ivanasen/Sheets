@@ -1,6 +1,6 @@
 #include <algorithm>
+#include <Strings.h>
 #include "SheetsClient.h"
-#include "StringUtils.h"
 #include "Commands.h"
 #include "Log.h"
 
@@ -12,14 +12,14 @@ namespace Cli {
     }
 
     void SheetsClient::onInput(const std::string &input) {
-        std::string lowerInput = StringUtils::toLowerCase(input);
+        std::string lowerInput = Utils::Strings::toLowerCase(input);
 
         if (lowerInput == Commands::PRINT) {
             _tableManager.print();
         } else if (lowerInput == Commands::EDIT) {
             _tableManager.edit();
         } else {
-            Log::i("Unknown command: " + input);
+            Utils::Log::i("Unknown command: " + input);
         }
     }
 

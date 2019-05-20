@@ -1,14 +1,10 @@
 #include <regex>
 #include <string>
-#include "Constants.cpp"
 #include "TokenValues.h"
 #include "ArithmeticFormulasUtils.h"
-#include "StringUtils.h"
+#include "Strings.h"
 
 namespace SheetsCore {
-    bool ArithmeticFormulasUtils::isTableCellIdentifier(const std::string &s) {
-        return std::regex_match(s, TABLE_CELL_FORMAT);
-    }
 
     bool ArithmeticFormulasUtils::isFormula(const std::string &s) {
         return std::string(1, s[0]) == TOKEN_VALUES[(int) TokenType::EQUAL].value;
@@ -79,7 +75,6 @@ namespace SheetsCore {
         }
     }
 
-
     Token ArithmeticFormulasUtils::extractPotentialNumberToken(std::string s) {
         std::string result;
         char decimalSeparator = TOKEN_VALUES[(int) TokenType::DECIMAL_SEPARATOR].value[0];
@@ -116,7 +111,7 @@ namespace SheetsCore {
 
         Token stringToken = extractStringToken(s);
 
-        if (isTableCellIdentifier(stringToken.value)) {
+        if (TableCellPosition::isTableCellIdentifier(stringToken.value)) {
             return Token(TokenType::IDENTIFIER, stringToken.value);
         } else {
             return stringToken;

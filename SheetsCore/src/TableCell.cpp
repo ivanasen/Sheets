@@ -10,16 +10,16 @@ namespace SheetsCore {
             : _type(type), _value(std::move(value)) {
     }
 
+    TableCell::TableCell(const TableCell &tableCell)
+            : _type(tableCell._type), _value(tableCell._value) {
+    }
+
     std::string TableCell::getValue() {
         return _value;
     }
 
     CellType TableCell::getType() const {
         return _type;
-    }
-
-    TableCell::TableCell(const TableCell &tableCell)
-            : _type(tableCell._type), _value(tableCell._value) {
     }
 }
 

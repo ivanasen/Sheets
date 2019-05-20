@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Log.h"
 
-namespace Cli {
+namespace Utils {
 
     void Log::i(const std::string &s) {
         std::cout << s << std::endl;

@@ -2,8 +2,8 @@
 
 #include <vector>
 #include <iostream>
+#include <Strings.h>
 #include "Client.h"
-#include "StringUtils.h"
 #include "Client.h"
 
 namespace Cli {
@@ -13,9 +13,9 @@ namespace Cli {
         std::cout << _cmdPrefix;
         do {
             getline(std::cin, input);
-            std::string trimmed = StringUtils::trimString(input);
-            if (!trimmed.empty() && trimmed != _quitCmd) {
-                onInput(trimmed);
+            Utils::Strings::trim(input);
+            if (!input.empty() && input != _quitCmd) {
+                onInput(input);
             }
             std::cout << _cmdPrefix;
         } while (input != _quitCmd);

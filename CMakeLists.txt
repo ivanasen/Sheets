@@ -5,5 +5,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(SheetsCore)
 add_subdirectory(Cli)
-add_subdirectory(SheetsCore.Tests)
+add_subdirectory(Utils)
+add_subdirectory(Tests)
 add_subdirectory(lib/catch)

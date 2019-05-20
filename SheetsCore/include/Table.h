@@ -11,6 +11,8 @@ namespace SheetsCore {
         static const size_t DEFAULT_INITIAL_HEIGHT;
         static const size_t DEFAULT_INITIAL_WIDTH;
         static const size_t MAX_SIZE;
+        static const std::string EMPTY_CELL_VALUE;
+        static const std::string ERROR_TABLE_CELL_VALUE;
 
         Table();
 
@@ -33,8 +35,10 @@ namespace SheetsCore {
     private:
         std::vector<std::vector<TableCell *>> _cells;
 
-        void _resizeIfNeeded(size_t requiredHeight, size_t requiredWidth);
-
         static CellType _determineCellType(const std::string &cellValue);
+
+        void _resizeIfNotBigEnough(size_t height, size_t width);
+
+
     };
 }

@@ -12,6 +12,10 @@ namespace Cli {
 
     private:
         SheetsCore::Table _table;
+
+        void _printTable(const SheetsCore::Table &table);
+
+        static std::string _formatCell(const std::string &cellValue);
     };
 
 }
