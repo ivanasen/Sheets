@@ -4,11 +4,13 @@
 #include "TokenValues.h"
 #include "Constants.cpp"
 #include "FormulaTableCell.h"
+#include "TableCellRangeException.h"
 #include <iostream>
 
 namespace SheetsCore {
     const size_t Table::DEFAULT_INITIAL_HEIGHT = 10;
     const size_t Table::DEFAULT_INITIAL_WIDTH = 10;
+    const size_t Table::MAX_SIZE = 1000;
 
     std::string Table::getCellValue(const TableCellPosition &position) const {
         size_t row = position.getRow();
@@ -47,6 +49,11 @@ namespace SheetsCore {
     }
 
     void Table::_resizeIfNeeded(size_t requiredHeight, size_t requiredWidth) {
+        if (requiredHeight > MAX_SIZE || requiredWidth > MAX_SIZE) {
+            throw TableCellRangeException();
+        }
+
+
         if (requiredHeight > _cells.size()) {
             _cells.resize(requiredHeight);
         }

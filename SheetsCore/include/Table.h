@@ -10,6 +10,7 @@ namespace SheetsCore {
     public:
         static const size_t DEFAULT_INITIAL_HEIGHT;
         static const size_t DEFAULT_INITIAL_WIDTH;
+        static const size_t MAX_SIZE;
 
         Table();
 

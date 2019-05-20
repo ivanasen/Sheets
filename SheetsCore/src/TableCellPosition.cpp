@@ -1,9 +1,11 @@
 #include <cctype>
 #include <stdexcept>
+#include <Table.h>
 #include "TableCellPosition.h"
 #include "StringUtils.h"
 #include "ArithmeticFormulasUtils.h"
 #include "TokenValues.h"
+#include "TableCellRangeException.h"
 
 namespace SheetsCore {
 
@@ -38,8 +40,21 @@ namespace SheetsCore {
             colStr += *(iterator++);
         }
 
-        _row = std::stoul(rowStr) - 1;
-        _column = std::stoul(colStr) - 1;
+        try {
+
+            long row = std::stoul(rowStr) - 1;
+            long column = std::stoul(colStr) - 1;
+
+            if (row < 0 || column < 0 || row > Table::MAX_SIZE || column > Table::MAX_SIZE) {
+                throw TableCellRangeException();
+            }
+
+            _row = row;
+            _column = column;
+
+        } catch (const std::out_of_range &e) {
+            throw TableCellRangeException();
+        }
     }
 
     size_t TableCellPosition::getRow() const {
