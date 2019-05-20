@@ -10,7 +10,10 @@ namespace SheetsCore {
     const size_t Table::DEFAULT_INITIAL_HEIGHT = 10;
     const size_t Table::DEFAULT_INITIAL_WIDTH = 10;
 
-    std::string Table::getCellValue(size_t row, size_t col) const {
+    std::string Table::getCellValue(const TableCellPosition &position) const {
+        size_t row = position.getRow();
+        size_t col = position.getColumn();
+
         if (row > _cells.size() - 1
             || (!_cells.empty() && col > _cells[0].size() - 1)
             || _cells[row][col] == nullptr) {
@@ -28,7 +31,10 @@ namespace SheetsCore {
             : _cells(initialHeight, std::vector<std::shared_ptr<TableCell>>(initialWidth)) {
     }
 
-    void Table::setCellValue(size_t row, size_t col, const std::string &newCellValue) {
+    void Table::setCellValue(const TableCellPosition &position, const std::string &newCellValue) {
+        size_t row = position.getRow();
+        size_t col = position.getColumn();
+
         _resizeIfNeeded(row + 1, col + 1);
 
         CellType newCellType = _determineCellType(newCellValue);
@@ -62,25 +68,15 @@ namespace SheetsCore {
 
         for (int i = 0; i < result.size(); i++) {
             for (int j = 0; j < result[0].size(); j++) {
-                result[i][j] = getCellValue(i, j);
+                result[i][j] = getCellValue(TableCellPosition(i, j));
             }
         }
 
         return result;
     }
 
-    void Table::setCellValue(const std::string &identifier, const std::string &cellValue) {
-        TableCellPosition position = ArithmeticFormulasUtils::convertFromIdentifierToTablePosition(identifier);
-        setCellValue(position.row, position.column, cellValue);
-    }
-
-    std::string Table::getCellValue(const std::string &identifier) const {
-        TableCellPosition position = ArithmeticFormulasUtils::convertFromIdentifierToTablePosition(identifier);
-        return getCellValue(position.row, position.column);
-    }
-
-    const std::shared_ptr<TableCell> Table::getCell(size_t row, size_t column) const {
-        return _cells[row][column];
+    const std::shared_ptr<TableCell> Table::getCell(const TableCellPosition &position) const {
+        return _cells[position.getRow()][position.getColumn()];
     }
 
     CellType Table::_determineCellType(const std::string &cellValue) {
@@ -94,4 +90,13 @@ namespace SheetsCore {
             return CellType::STRING;
         }
     }
+
+    size_t Table::getHeight() const {
+        return _cells.size();
+    }
+
+    size_t Table::getWidth() const {
+        return _cells.empty() ? 0 : _cells[0].size();
+    }
+
 }

@@ -5,6 +5,9 @@
 #include "StringUtils.h"
 #include "ArithmeticFormulasUtils.h"
 #include "TokenValues.h"
+#include "Constants.cpp"
+#include <iostream>
+#include <unordered_map>
 
 namespace SheetsCore {
 
@@ -16,7 +19,7 @@ namespace SheetsCore {
             : TableCell(CellType::FORMULA, std::move(formula)),
               _tableCellPosition(tableRow, tableColumn),
               _table(table) {
-        _tokenizeFormula(getFormulaValue());
+        _tokenizeFormula(getFormula());
         _matchBrackets();
     }
 
@@ -25,7 +28,7 @@ namespace SheetsCore {
         return std::to_string(result);
     }
 
-    std::string FormulaTableCell::getFormulaValue() {
+    std::string FormulaTableCell::getFormula() {
         return TableCell::getValue();
     }
 
@@ -62,9 +65,8 @@ namespace SheetsCore {
                 i += token.value.size() - 1;
 
                 if (token.type == TokenType::IDENTIFIER) {
-                    TableCellPosition position =
-                            ArithmeticFormulasUtils::convertFromIdentifierToTablePosition(token.value);
-                    _tabeCells.push_back(position);
+                    TableCellPosition position(token.value);
+                    _tableCells.push_back(position);
                 }
 
             } else if (ArithmeticFormulasUtils::isOperator(formula[i])) {
@@ -79,8 +81,15 @@ namespace SheetsCore {
     }
 
     double FormulaTableCell::_calculate(
-            unsigned long startIndex,
-            unsigned long endIndex) {
+            long startIndex,
+            long endIndex) {
+
+        if (startIndex > endIndex
+            || startIndex >= _tokenizedFormula.size()
+            || endIndex >= _tokenizedFormula.size()) {
+            throw std::invalid_argument("Invalid formula: \"" + getFormula() + "\"");
+        }
+
         if (_tokenizedFormula[endIndex] == TOKEN_VALUES[TokenType::CLOSING_PARENTHESIS] &&
             _bracketMatches[endIndex] == startIndex) {
             return _calculate(startIndex + 1, endIndex - 1);
@@ -141,7 +150,7 @@ namespace SheetsCore {
         } else if (token.type == TokenType::STRING) {
             return 0;
         } else if (token.type == TokenType::IDENTIFIER) {
-            std::string cellValue = _table.getCellValue(token.value);
+            std::string cellValue = _table.getCellValue(TableCellPosition(token.value));
             if (StringUtils::isDecimal(cellValue)) {
                 return std::stod(cellValue);
             }
@@ -171,10 +180,17 @@ namespace SheetsCore {
     }
 
     std::vector<TableCellPosition> FormulaTableCell::getContainedTableCellPositions() const {
-        return _tabeCells;
+        return _tableCells;
     }
 
     void FormulaTableCell::_requireNoTableCellConflicts(const FormulaTableCell &cell) {
+        std::vector<std::vector<size_t>> visited(_table.getHeight(), std::vector<size_t>(_table.getWidth()));
+        _requireNoTableCellConflicts(cell, visited);
+    }
+
+    void FormulaTableCell::_requireNoTableCellConflicts(
+            const FormulaTableCell &cell,
+            std::vector<std::vector<size_t>> &visited) {
         std::vector<TableCellPosition> cellPositions = cell.getContainedTableCellPositions();
 
         for (const TableCellPosition &pos : cellPositions) {
@@ -182,7 +198,13 @@ namespace SheetsCore {
                 throw std::invalid_argument("Formula cell can\'t reference itself");
             }
 
-            std::shared_ptr<TableCell> containedCell = _table.getCell(pos.row, pos.column);
+            if (visited[pos.getRow()][pos.getColumn()]) {
+                return;
+            }
+
+            visited[pos.getRow()][pos.getColumn()] = true;
+
+            std::shared_ptr<TableCell> containedCell = _table.getCell(pos);
             if (containedCell != nullptr && containedCell->getType() == CellType::FORMULA) {
                 FormulaTableCell formula = *std::dynamic_pointer_cast<FormulaTableCell>(containedCell);
                 _requireNoTableCellConflicts(formula);

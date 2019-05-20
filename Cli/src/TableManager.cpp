@@ -1,6 +1,8 @@
 #include <iostream>
 #include "TableManager.h"
 #include "TableUtils.h"
+#include "../../SheetsCore/src/ArithmeticFormulasUtils.h"
+#include "Log.h"
 
 namespace Cli {
 
@@ -11,18 +13,23 @@ namespace Cli {
     void TableManager::edit() {
         std::string cell;
         std::cout << "Enter cell number you\'d like to edit: ";
-        std::cin >> cell;
-
-        std::string newCellValue;
-        std::cout << "New cell value: ";
-        std::cin.ignore();
-        std::getline(std::cin, newCellValue);
+        std::getline(std::cin, cell);
 
         try {
-            _table.setCellValue(cell, newCellValue);
+            SheetsCore::TableCellPosition position(cell);
+            std::string newCellValue;
+            std::cout << "New cell value: ";
+            std::getline(std::cin, newCellValue);
+
+            try {
+                _table.setCellValue(position, newCellValue);
+            } catch (const std::invalid_argument &e) {
+                std::cout << e.what() << std::endl;
+            }
         } catch (const std::invalid_argument &e) {
-            std::cout << e.what() << std::endl;
+            Log::i(e.what());
         }
+
     }
 
 }

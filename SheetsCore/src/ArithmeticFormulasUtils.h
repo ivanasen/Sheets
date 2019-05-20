@@ -25,14 +25,12 @@ namespace SheetsCore {
 
         static double applyOperator(double &leftOperand, double &rightOperand, const Token &op);
 
-        static TableCellPosition convertFromIdentifierToTablePosition(std::string identifier);
-
         static bool isOperator(char c);
 
         static Token extractPotentialNumberToken(std::string s);
 
         static Token extractStringToken(std::string s);
 
-        static Token extractPotentialIdentifierToken(std::string s);
+        static Token extractPotentialIdentifierToken(const std::string &s);
     };
 }

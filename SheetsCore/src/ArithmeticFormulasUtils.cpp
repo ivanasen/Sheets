@@ -79,33 +79,6 @@ namespace SheetsCore {
         }
     }
 
-    TableCellPosition ArithmeticFormulasUtils::convertFromIdentifierToTablePosition(std::string identifier) {
-        StringUtils::trim(identifier);
-
-        if (!ArithmeticFormulasUtils::isTableCellIdentifier(identifier)) {
-            throw std::invalid_argument("Invalid table cell identifier: \"" + identifier + "\"");
-        }
-
-        std::string rowToken = TOKEN_VALUES[TokenType::ROW].value;
-        std::string colToken = TOKEN_VALUES[TokenType::COLUMN].value;
-
-        std::string rowStr;
-        std::string colStr;
-
-        std::string::iterator iterator = identifier.begin() + rowToken.size();
-
-        while (iterator < identifier.end() && std::isdigit(*iterator)) {
-            rowStr += *(iterator++);
-        }
-        iterator += colToken.size();
-        while (iterator < identifier.end() && std::isdigit(*iterator)) {
-            colStr += *(iterator++);
-        }
-
-        unsigned long row = std::stoul(rowStr) - 1;
-        unsigned long col = std::stoul(colStr) - 1;
-        return TableCellPosition(row, col);
-    }
 
     Token ArithmeticFormulasUtils::extractPotentialNumberToken(std::string s) {
         std::string result;
@@ -138,9 +111,8 @@ namespace SheetsCore {
         return Token(TokenType::STRING, result);
     }
 
-    Token ArithmeticFormulasUtils::extractPotentialIdentifierToken(std::string s) {
+    Token ArithmeticFormulasUtils::extractPotentialIdentifierToken(const std::string &s) {
         std::string result;
-        std::string::iterator it = s.begin();
 
         Token stringToken = extractStringToken(s);
 

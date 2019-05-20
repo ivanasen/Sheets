@@ -15,17 +15,17 @@ namespace SheetsCore {
 
         Table(size_t initialHeight, size_t initialWidth);
 
-        std::string getCellValue(size_t row, size_t col) const;
+        std::string getCellValue(const TableCellPosition &position) const;
 
-        std::string getCellValue(const std::string &identifier) const;
-
-        const std::shared_ptr<TableCell> getCell(size_t row, size_t column) const;
+        const std::shared_ptr<TableCell> getCell(const TableCellPosition &position) const;
 
         std::vector<std::vector<std::string>> getAllCellValues() const;
 
-        void setCellValue(size_t row, size_t col, const std::string &newCellValue);
+        void setCellValue(const TableCellPosition &position, const std::string &newCellValue);
 
-        void setCellValue(const std::string &identifier, const std::string &cellValue);
+        size_t getHeight() const;
+
+        size_t getWidth() const;
 
     private:
         std::vector<std::vector<std::shared_ptr<TableCell>>> _cells;

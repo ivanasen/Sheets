@@ -6,17 +6,17 @@ using namespace SheetsCore;
 TEST_CASE("Table value setting and getting works correctly", "[Table]") {
     std::string expected = "Pesho";
     Table table(10, 10);
-    table.setCellValue(0, 0, expected);
+    table.setCellValue(TableCellPosition(0, 0), expected);
 
-    REQUIRE(expected == table.getCellValue(0, 0));
+    REQUIRE(expected == table.getCellValue(TableCellPosition(0, 0)));
 }
 
 TEST_CASE("Table resizes when which is out of current bounds is set", "[Table]") {
     std::string expected = "Pesho";
     Table table(10, 10);
-    table.setCellValue(1000, 1000, expected);
+    table.setCellValue(TableCellPosition(1000, 1000), expected);
 
-    REQUIRE(expected == table.getCellValue(1000, 1000));
+    REQUIRE(expected == table.getCellValue(TableCellPosition(1000, 1000)));
 }
 
 
@@ -26,8 +26,8 @@ TEST_CASE("Table can do simple arithmetic formulas", "[Table]") {
 
     Table table;
 
-    table.setCellValue(0, 0, formula);
-    std::string cellValue = table.getCellValue(0, 0);
+    table.setCellValue(TableCellPosition(0, 0), formula);
+    std::string cellValue = table.getCellValue(TableCellPosition(0, 0));
 
     REQUIRE(expected == std::stod(cellValue));
 }

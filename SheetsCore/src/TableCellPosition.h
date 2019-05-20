@@ -3,14 +3,23 @@
 
 #include <cstdio>
 
-struct TableCellPosition {
-public:
-    size_t row;
-    size_t column;
+namespace SheetsCore {
 
-    TableCellPosition(size_t row, size_t column);
+    class TableCellPosition {
+    public:
+        TableCellPosition(size_t row, size_t column);
 
-    bool operator==(const TableCellPosition &other) const;
-};
+        explicit TableCellPosition(std::string identifier);
 
+        size_t getRow() const;
 
+        size_t getColumn() const;
+
+        bool operator==(const TableCellPosition &other) const;
+
+    private:
+        size_t _row{};
+        size_t _column{};
+    };
+
+}
