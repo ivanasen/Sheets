@@ -15,12 +15,13 @@ namespace SheetsCore {
 
         std::string getFormulaValue();
 
-        std::vector<TableCellPosition> getContainedTableIdentifiers() const;
+        std::vector<TableCellPosition> getContainedTableCellPositions() const;
 
     private:
+        TableCellPosition _tableCellPosition;
         const Table &_table;
         std::vector<Token> _tokenizedFormula;
-        std::vector<TableCellPosition> _tableIdentifiers;
+        std::vector<TableCellPosition> _tabeCells;
         std::vector<unsigned long> _bracketMatches;
 
         double _calculate();
@@ -40,5 +41,3 @@ namespace SheetsCore {
         void _requireNoTableCellConflicts(const FormulaTableCell &cell);
     };
 }
-
-

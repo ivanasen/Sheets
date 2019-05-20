@@ -2,15 +2,20 @@
 #include <stack>
 
 #include "FormulaTableCell.h"
-#include "TableFormulaCalculator.h"
 #include "StringUtils.h"
 #include "ArithmeticFormulasUtils.h"
 #include "TokenValues.h"
 
 namespace SheetsCore {
 
-    FormulaTableCell::FormulaTableCell(size_t tableRow, size_t tableColumn, std::string formula, const Table &table)
-            : TableCell(tableRow, tableColumn, CellType::FORMULA, std::move(formula)), _table(table) {
+    FormulaTableCell::FormulaTableCell(
+            size_t tableRow,
+            size_t tableColumn,
+            std::string formula,
+            const Table &table)
+            : TableCell(CellType::FORMULA, std::move(formula)),
+              _tableCellPosition(tableRow, tableColumn),
+              _table(table) {
         _tokenizeFormula(getFormulaValue());
         _matchBrackets();
     }
@@ -59,7 +64,7 @@ namespace SheetsCore {
                 if (token.type == TokenType::IDENTIFIER) {
                     TableCellPosition position =
                             ArithmeticFormulasUtils::convertFromIdentifierToTablePosition(token.value);
-                    _tableIdentifiers.push_back(position);
+                    _tabeCells.push_back(position);
                 }
 
             } else if (ArithmeticFormulasUtils::isOperator(formula[i])) {
@@ -165,20 +170,21 @@ namespace SheetsCore {
         return splitIndex;
     }
 
-    std::vector<TableCellPosition> FormulaTableCell::getContainedTableIdentifiers() const {
-        return _tableIdentifiers;
+    std::vector<TableCellPosition> FormulaTableCell::getContainedTableCellPositions() const {
+        return _tabeCells;
     }
 
     void FormulaTableCell::_requireNoTableCellConflicts(const FormulaTableCell &cell) {
-        std::vector<TableCellPosition> cellIdentifiers = cell.getContainedTableIdentifiers();
-        for (const TableCellPosition &pos : cellIdentifiers) {
-            if (getTablePosition() == pos) {
+        std::vector<TableCellPosition> cellPositions = cell.getContainedTableCellPositions();
+
+        for (const TableCellPosition &pos : cellPositions) {
+            if (_tableCellPosition == pos) {
                 throw std::invalid_argument("Formula cell can\'t reference itself");
             }
 
-            std::shared_ptr<TableCell> identifierTableCell = _table.getCell(pos);
-            if (identifierTableCell != nullptr && identifierTableCell->getType() == CellType::FORMULA) {
-                FormulaTableCell formula = *std::dynamic_pointer_cast<FormulaTableCell>(identifierTableCell);
+            std::shared_ptr<TableCell> containedCell = _table.getCell(pos.row, pos.column);
+            if (containedCell != nullptr && containedCell->getType() == CellType::FORMULA) {
+                FormulaTableCell formula = *std::dynamic_pointer_cast<FormulaTableCell>(containedCell);
                 _requireNoTableCellConflicts(formula);
             }
         }

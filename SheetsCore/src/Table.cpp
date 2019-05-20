@@ -1,5 +1,4 @@
 #include "Table.h"
-#include "TableFormulaCalculator.h"
 #include "StringUtils.h"
 #include "ArithmeticFormulasUtils.h"
 #include "TokenValues.h"
@@ -8,10 +7,10 @@
 #include <iostream>
 
 namespace SheetsCore {
-    const int Table::DEFAULT_INITIAL_HEIGHT = 10;
-    const int Table::DEFAULT_INITIAL_WIDTH = 10;
+    const size_t Table::DEFAULT_INITIAL_HEIGHT = 10;
+    const size_t Table::DEFAULT_INITIAL_WIDTH = 10;
 
-    std::string Table::getCellValue(unsigned row, unsigned col) const {
+    std::string Table::getCellValue(size_t row, size_t col) const {
         if (row > _cells.size() - 1
             || (!_cells.empty() && col > _cells[0].size() - 1)
             || _cells[row][col] == nullptr) {
@@ -25,23 +24,23 @@ namespace SheetsCore {
         }
     }
 
-    Table::Table(unsigned initialHeight, unsigned initialWidth)
+    Table::Table(size_t initialHeight, size_t initialWidth)
             : _cells(initialHeight, std::vector<std::shared_ptr<TableCell>>(initialWidth)) {
     }
 
-    void Table::setCellValue(unsigned row, unsigned col, const std::string &cellValue) {
+    void Table::setCellValue(size_t row, size_t col, const std::string &newCellValue) {
         _resizeIfNeeded(row + 1, col + 1);
 
-        TableCell newCell = TableCellParser::parse(row, col, cellValue);
+        CellType newCellType = _determineCellType(newCellValue);
 
-        if (newCell.getType() == CellType::FORMULA) {
-            _cells[row][col] = std::make_shared<FormulaTableCell>(row, col, newCell.getValue(), *this);
+        if (newCellType == CellType::FORMULA) {
+            _cells[row][col] = std::make_shared<FormulaTableCell>(row, col, newCellValue, *this);
         } else {
-            _cells[row][col] = std::make_shared<TableCell>(newCell);
+            _cells[row][col] = std::make_shared<TableCell>(newCellType, newCellValue);
         }
     }
 
-    void Table::_resizeIfNeeded(unsigned requiredHeight, unsigned requiredWidth) {
+    void Table::_resizeIfNeeded(size_t requiredHeight, size_t requiredWidth) {
         if (requiredHeight > _cells.size()) {
             _cells.resize(requiredHeight);
         }
@@ -80,8 +79,19 @@ namespace SheetsCore {
         return getCellValue(position.row, position.column);
     }
 
-    const std::shared_ptr<TableCell> Table::getCell(const TableCellPosition &position) const {
-        return _cells[position.row][position.column];
+    const std::shared_ptr<TableCell> Table::getCell(size_t row, size_t column) const {
+        return _cells[row][column];
     }
 
+    CellType Table::_determineCellType(const std::string &cellValue) {
+        if (StringUtils::isInteger(cellValue)) {
+            return CellType::INTEGER;
+        } else if (StringUtils::isDecimal(cellValue)) {
+            return CellType::DECIMAL;
+        } else if (ArithmeticFormulasUtils::isFormula(cellValue)) {
+            return CellType::FORMULA;
+        } else {
+            return CellType::STRING;
+        }
+    }
 }

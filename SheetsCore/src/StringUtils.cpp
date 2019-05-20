@@ -105,10 +105,4 @@ namespace SheetsCore {
         return !s.empty();
     }
 
-    std::string StringUtils::toLowerCase(std::string string) {
-        std::string copy = std::move(string);
-        std::transform(copy.begin(), copy.end(), copy.begin(), ::tolower);
-        return copy;
-    }
-
 }

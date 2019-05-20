@@ -4,33 +4,34 @@
 #include <string>
 #include <memory>
 #include "TableCell.h"
-#include "../src/TableCellParser.h"
 
 namespace SheetsCore {
     class Table {
     public:
-        static const int DEFAULT_INITIAL_HEIGHT;
-        static const int DEFAULT_INITIAL_WIDTH;
+        static const size_t DEFAULT_INITIAL_HEIGHT;
+        static const size_t DEFAULT_INITIAL_WIDTH;
 
         Table();
 
-        Table(unsigned initialHeight, unsigned initialWidth);
+        Table(size_t initialHeight, size_t initialWidth);
 
-        std::string getCellValue(unsigned row, unsigned col) const;
+        std::string getCellValue(size_t row, size_t col) const;
 
         std::string getCellValue(const std::string &identifier) const;
 
-        const std::shared_ptr<TableCell> getCell(const TableCellPosition &position) const;
+        const std::shared_ptr<TableCell> getCell(size_t row, size_t column) const;
 
         std::vector<std::vector<std::string>> getAllCellValues() const;
 
-        void setCellValue(unsigned row, unsigned col, const std::string &cellValue);
+        void setCellValue(size_t row, size_t col, const std::string &newCellValue);
 
         void setCellValue(const std::string &identifier, const std::string &cellValue);
 
     private:
         std::vector<std::vector<std::shared_ptr<TableCell>>> _cells;
 
-        void _resizeIfNeeded(unsigned requiredHeight, unsigned requiredWidth);
+        void _resizeIfNeeded(size_t requiredHeight, size_t requiredWidth);
+
+        static CellType _determineCellType(const std::string &cellValue);
     };
 }

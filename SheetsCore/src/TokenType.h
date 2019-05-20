@@ -2,7 +2,6 @@
 
 namespace SheetsCore {
 
-
     enum class TokenType {
         DECIMAL_SEPARATOR,
         COMMA,
@@ -19,4 +18,5 @@ namespace SheetsCore {
         ROW,
         COLUMN
     };
+
 }

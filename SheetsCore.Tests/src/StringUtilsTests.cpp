@@ -1,5 +1,5 @@
 #include <catch.hpp>
-#include "../SheetsCore/src/StringUtils.h"
+#include "../../SheetsCore/src/StringUtils.h"
 
 using namespace SheetsCore;
 

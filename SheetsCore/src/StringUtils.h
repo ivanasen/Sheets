@@ -20,8 +20,6 @@ namespace SheetsCore {
         static bool isInteger(const std::string &s);
 
         static bool isDecimal(const std::string &s);
-
-        static std::string toLowerCase(std::string string);
     };
 
 }
