@@ -2,7 +2,8 @@
 
 namespace SheetsCore {
 
-    enum class TokenType {
+    //Order of these shouldn't be changed, since TokenValues array depends on it
+    enum class TokenType : int {
         DECIMAL_SEPARATOR,
         COMMA,
         OPENING_PARENTHESIS,
@@ -11,12 +12,12 @@ namespace SheetsCore {
         MINUS,
         MULTIPLICATION,
         DIVISION,
-        IDENTIFIER,
-        STRING,
-        NUMBER,
         EQUAL,
         ROW,
-        COLUMN
+        COLUMN,
+        IDENTIFIER,
+        STRING,
+        NUMBER
     };
 
 }

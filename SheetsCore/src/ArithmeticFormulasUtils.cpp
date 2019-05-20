@@ -11,14 +11,14 @@ namespace SheetsCore {
     }
 
     bool ArithmeticFormulasUtils::isFormula(const std::string &s) {
-        return std::string(1, s[0]) == TOKEN_VALUES[TokenType::EQUAL].value;
+        return std::string(1, s[0]) == TOKEN_VALUES[(int) TokenType::EQUAL].value;
     }
 
     bool ArithmeticFormulasUtils::isOperator(const std::string &s) {
-        return s == TOKEN_VALUES[TokenType::PLUS].value ||
-               s == TOKEN_VALUES[TokenType::MINUS].value ||
-               s == TOKEN_VALUES[TokenType::MULTIPLICATION].value ||
-               s == TOKEN_VALUES[TokenType::DIVISION].value;
+        return s == TOKEN_VALUES[(int) TokenType::PLUS].value ||
+               s == TOKEN_VALUES[(int) TokenType::MINUS].value ||
+               s == TOKEN_VALUES[(int) TokenType::MULTIPLICATION].value ||
+               s == TOKEN_VALUES[(int) TokenType::DIVISION].value;
     }
 
     bool ArithmeticFormulasUtils::isOperator(char c) {
@@ -33,14 +33,14 @@ namespace SheetsCore {
     }
 
     Token ArithmeticFormulasUtils::getArithmeticOperatorToken(const std::string &s) {
-        if (s == TOKEN_VALUES[TokenType::PLUS].value) {
-            return TOKEN_VALUES[TokenType::PLUS];
-        } else if (s == TOKEN_VALUES[TokenType::MINUS].value) {
-            return TOKEN_VALUES[TokenType::MINUS];
-        } else if (s == TOKEN_VALUES[TokenType::MULTIPLICATION].value) {
-            return TOKEN_VALUES[TokenType::MULTIPLICATION];
-        } else if (s == TOKEN_VALUES[TokenType::DIVISION].value) {
-            return TOKEN_VALUES[TokenType::DIVISION];
+        if (s == TOKEN_VALUES[(int) TokenType::PLUS].value) {
+            return TOKEN_VALUES[(int) TokenType::PLUS];
+        } else if (s == TOKEN_VALUES[(int) TokenType::MINUS].value) {
+            return TOKEN_VALUES[(int) TokenType::MINUS];
+        } else if (s == TOKEN_VALUES[(int) TokenType::MULTIPLICATION].value) {
+            return TOKEN_VALUES[(int) TokenType::MULTIPLICATION];
+        } else if (s == TOKEN_VALUES[(int) TokenType::DIVISION].value) {
+            return TOKEN_VALUES[(int) TokenType::DIVISION];
         } else {
             throw std::invalid_argument("\"s\" is not an arithmetic operator");
         }
@@ -82,8 +82,8 @@ namespace SheetsCore {
 
     Token ArithmeticFormulasUtils::extractPotentialNumberToken(std::string s) {
         std::string result;
-        char decimalSeparator = TOKEN_VALUES[TokenType::DECIMAL_SEPARATOR].value[0];
-        char closingParenthesis = TOKEN_VALUES[TokenType::CLOSING_PARENTHESIS].value[0];
+        char decimalSeparator = TOKEN_VALUES[(int) TokenType::DECIMAL_SEPARATOR].value[0];
+        char closingParenthesis = TOKEN_VALUES[(int) TokenType::CLOSING_PARENTHESIS].value[0];
 
         bool foundDecimalSeparator = false;
         bool isNumber = true;

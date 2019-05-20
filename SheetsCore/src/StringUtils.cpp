@@ -88,7 +88,7 @@ namespace SheetsCore {
         std::string trimmed = s;
         trim(trimmed);
 
-        Token decimalSeparator = TOKEN_VALUES[TokenType::DECIMAL_SEPARATOR];
+        Token decimalSeparator = TOKEN_VALUES[(int) TokenType::DECIMAL_SEPARATOR];
         bool foundDecimalSeparator = false;
         for (char c : trimmed) {
             if (std::isdigit(c)) {

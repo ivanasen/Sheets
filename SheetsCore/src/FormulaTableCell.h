@@ -3,7 +3,6 @@
 #include <Table.h>
 #include "TableCell.h"
 #include "Token.h"
-#include <unordered_map>
 #include "TableCellPosition.h"
 
 namespace SheetsCore {

@@ -7,7 +7,6 @@
 #include "TokenValues.h"
 #include "Constants.cpp"
 #include <iostream>
-#include <unordered_map>
 
 namespace SheetsCore {
 
@@ -41,10 +40,10 @@ namespace SheetsCore {
     void FormulaTableCell::_tokenizeFormula(std::string formula) {
         _requireValidFormat(formula);
 
-        const char decimalSeparator = TOKEN_VALUES[TokenType::DECIMAL_SEPARATOR].value[0];
-        const char openingParenthesis = TOKEN_VALUES[TokenType::OPENING_PARENTHESIS].value[0];
-        const char closingParenthesis = TOKEN_VALUES[TokenType::CLOSING_PARENTHESIS].value[0];
-        const char rowIdentifier = TOKEN_VALUES[TokenType::ROW].value[0];
+        const char decimalSeparator = TOKEN_VALUES[(int) TokenType::DECIMAL_SEPARATOR].value[0];
+        const char openingParenthesis = TOKEN_VALUES[(int) TokenType::OPENING_PARENTHESIS].value[0];
+        const char closingParenthesis = TOKEN_VALUES[(int) TokenType::CLOSING_PARENTHESIS].value[0];
+        const char rowIdentifier = TOKEN_VALUES[(int) TokenType::ROW].value[0];
 
         for (int i = 1; i < formula.size(); i++) {
             std::string toBeExtractedFrom = formula.substr(i, formula.size() - i);
@@ -56,9 +55,9 @@ namespace SheetsCore {
                 _tokenizedFormula.push_back(token);
                 i += token.value.size() - 1;
             } else if (formula[i] == openingParenthesis) {
-                _tokenizedFormula.push_back(TOKEN_VALUES[TokenType::OPENING_PARENTHESIS]);
+                _tokenizedFormula.push_back(TOKEN_VALUES[(int) TokenType::OPENING_PARENTHESIS]);
             } else if (formula[i] == closingParenthesis) {
-                _tokenizedFormula.push_back(TOKEN_VALUES[TokenType::CLOSING_PARENTHESIS]);
+                _tokenizedFormula.push_back(TOKEN_VALUES[(int) TokenType::CLOSING_PARENTHESIS]);
             } else if (formula[i] == rowIdentifier) {
                 Token token = ArithmeticFormulasUtils::extractPotentialIdentifierToken(toBeExtractedFrom);
                 _tokenizedFormula.push_back(token);
@@ -90,7 +89,7 @@ namespace SheetsCore {
             throw std::invalid_argument("Invalid formula: \"" + getFormula() + "\"");
         }
 
-        if (_tokenizedFormula[endIndex] == TOKEN_VALUES[TokenType::CLOSING_PARENTHESIS] &&
+        if (_tokenizedFormula[endIndex] == TOKEN_VALUES[(int) TokenType::CLOSING_PARENTHESIS] &&
             _bracketMatches[endIndex] == startIndex) {
             return _calculate(startIndex + 1, endIndex - 1);
         }
@@ -114,9 +113,9 @@ namespace SheetsCore {
         std::stack<std::pair<char, unsigned long>> bracketsStack;
 
         for (unsigned long i = 0; i < _tokenizedFormula.size(); i++) {
-            if (_tokenizedFormula[i] == TOKEN_VALUES[TokenType::OPENING_PARENTHESIS]) {
+            if (_tokenizedFormula[i] == TOKEN_VALUES[(int) TokenType::OPENING_PARENTHESIS]) {
                 bracketsStack.emplace('(', i);
-            } else if (_tokenizedFormula[i] == TOKEN_VALUES[TokenType::CLOSING_PARENTHESIS]) {
+            } else if (_tokenizedFormula[i] == TOKEN_VALUES[(int) TokenType::CLOSING_PARENTHESIS]) {
                 std::pair<char, unsigned long> top = bracketsStack.top();
 
                 if (top.first == '(') {
@@ -137,7 +136,7 @@ namespace SheetsCore {
     }
 
     void FormulaTableCell::_requireValidFormat(const std::string &formula) const {
-        char equalsSign = TOKEN_VALUES[TokenType::EQUAL].value[0];
+        char equalsSign = TOKEN_VALUES[(int) TokenType::EQUAL].value[0];
         if (formula[0] != equalsSign) {
             throw std::invalid_argument("Invalid formula: \"" + formula + "\"");
         }
@@ -164,7 +163,7 @@ namespace SheetsCore {
         int minSplitPrecedence = 3;
 
         for (long i = endIndex; i >= startIndex; i--) {
-            if (_tokenizedFormula[i] == TOKEN_VALUES[TokenType::CLOSING_PARENTHESIS]) {
+            if (_tokenizedFormula[i] == TOKEN_VALUES[(int) TokenType::CLOSING_PARENTHESIS]) {
                 i = _bracketMatches[i];
             }
 
@@ -207,7 +206,7 @@ namespace SheetsCore {
             const TableCell *containedCell = _table.getCell(pos);
             if (containedCell != nullptr && containedCell->getType() == CellType::FORMULA) {
                 FormulaTableCell formula = *((FormulaTableCell *) containedCell);
-                _requireNoTableCellConflicts(formula);
+                _requireNoTableCellConflicts(formula, visited);
             }
         }
     }

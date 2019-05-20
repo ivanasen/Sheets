@@ -24,8 +24,8 @@ namespace SheetsCore {
             throw std::invalid_argument("Invalid table cell identifier: \"" + identifier + "\"");
         }
 
-        std::string rowToken = TOKEN_VALUES[TokenType::ROW].value;
-        std::string colToken = TOKEN_VALUES[TokenType::COLUMN].value;
+        std::string rowToken = TOKEN_VALUES[(int) TokenType::ROW].value;
+        std::string colToken = TOKEN_VALUES[(int) TokenType::COLUMN].value;
 
         std::string rowStr;
         std::string colStr;
