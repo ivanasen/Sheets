@@ -79,8 +79,7 @@ namespace SheetsCore {
         }
     }
 
-    std::pair<unsigned long, unsigned long>
-    ArithmeticFormulasUtils::convertFromIdentifierToRowAndCol(std::string identifier) {
+    TableCellPosition ArithmeticFormulasUtils::convertFromIdentifierToTablePosition(std::string identifier) {
         StringUtils::trim(identifier);
 
         if (!ArithmeticFormulasUtils::isTableCellIdentifier(identifier)) {
@@ -105,7 +104,7 @@ namespace SheetsCore {
 
         unsigned long row = std::stoul(rowStr) - 1;
         unsigned long col = std::stoul(colStr) - 1;
-        return std::make_pair(row, col);
+        return TableCellPosition(row, col);
     }
 
     Token ArithmeticFormulasUtils::extractPotentialNumberToken(std::string s) {

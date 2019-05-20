@@ -32,10 +32,10 @@ namespace SheetsCore {
     void Table::setCellValue(unsigned row, unsigned col, const std::string &cellValue) {
         _resizeIfNeeded(row + 1, col + 1);
 
-        TableCell newCell = TableCellParser::parse(cellValue);
+        TableCell newCell = TableCellParser::parse(row, col, cellValue);
 
         if (newCell.getType() == CellType::FORMULA) {
-            _cells[row][col] = std::make_shared<FormulaTableCell>(newCell.getValue(), *this);
+            _cells[row][col] = std::make_shared<FormulaTableCell>(row, col, newCell.getValue(), *this);
         } else {
             _cells[row][col] = std::make_shared<TableCell>(newCell);
         }
@@ -71,19 +71,17 @@ namespace SheetsCore {
     }
 
     void Table::setCellValue(const std::string &identifier, const std::string &cellValue) {
-        std::pair<unsigned long, unsigned long> rowAndCol =
-                ArithmeticFormulasUtils::convertFromIdentifierToRowAndCol(identifier);
-        setCellValue(rowAndCol.first, rowAndCol.second, cellValue);
+        TableCellPosition position = ArithmeticFormulasUtils::convertFromIdentifierToTablePosition(identifier);
+        setCellValue(position.row, position.column, cellValue);
     }
 
     std::string Table::getCellValue(const std::string &identifier) const {
-        std::pair<unsigned long, unsigned long> rowAndCol =
-                ArithmeticFormulasUtils::convertFromIdentifierToRowAndCol(identifier);
-        return getCellValue(rowAndCol.first, rowAndCol.second);
+        TableCellPosition position = ArithmeticFormulasUtils::convertFromIdentifierToTablePosition(identifier);
+        return getCellValue(position.row, position.column);
     }
 
-    const TableCell &Table::getCell(unsigned row, unsigned col) const {
-        return *_cells[row][col];
+    const std::shared_ptr<TableCell> Table::getCell(const TableCellPosition &position) const {
+        return _cells[position.row][position.column];
     }
 
 }

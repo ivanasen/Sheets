@@ -3,23 +3,24 @@
 #include <Table.h>
 #include "TableCell.h"
 #include "Token.h"
+#include "TableCellPosition.h"
 
 namespace SheetsCore {
 
     class FormulaTableCell : public TableCell {
     public:
-        explicit FormulaTableCell(std::string formula, const Table &table);
+        explicit FormulaTableCell(size_t tableRow, size_t tableColumn, std::string formula, const Table &table);
 
         std::string getValue() override;
 
         std::string getFormulaValue();
 
-        std::vector<Token> getContainedTableIdentifiers() const;
+        std::vector<TableCellPosition> getContainedTableIdentifiers() const;
 
     private:
         const Table &_table;
         std::vector<Token> _tokenizedFormula;
-        std::vector<Token> _tableIdentifiers;
+        std::vector<TableCellPosition> _tableIdentifiers;
         std::vector<unsigned long> _bracketMatches;
 
         double _calculate();
@@ -35,6 +36,8 @@ namespace SheetsCore {
         long _findExpressionSplitIndex(long startIndex, long endIndex) const;
 
         double _evaluateToken(const Token &token);
+
+        void _requireNoTableCellConflicts(const FormulaTableCell &cell);
     };
 }
 

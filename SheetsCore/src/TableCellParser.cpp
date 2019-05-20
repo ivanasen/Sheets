@@ -6,15 +6,15 @@
 
 namespace SheetsCore {
 
-    TableCell TableCellParser::parse(const std::string &string) {
+    TableCell TableCellParser::parse(size_t row, size_t col, const std::string &string) {
         if (StringUtils::isInteger(string)) {
-            return TableCell(CellType::INTEGER, string);
+            return TableCell(row, col, CellType::INTEGER, string);
         } else if (StringUtils::isDecimal(string)) {
-            return TableCell(CellType::DECIMAL, string);
+            return TableCell(row, col, CellType::DECIMAL, string);
         } else if (ArithmeticFormulasUtils::isFormula(string)) {
-            return TableCell(CellType::FORMULA, string);
+            return TableCell(row, col, CellType::FORMULA, string);
         } else {
-            return TableCell(CellType::STRING, string);
+            return TableCell(row, col, CellType::STRING, string);
         }
     }
 }

@@ -2,6 +2,7 @@
 
 #include "TokenType.h"
 #include "Token.h"
+#include "TableCellPosition.h"
 
 namespace SheetsCore {
     class ArithmeticFormulasUtils {
@@ -24,7 +25,7 @@ namespace SheetsCore {
 
         static double applyOperator(double &leftOperand, double &rightOperand, const Token &op);
 
-        static std::pair<unsigned long, unsigned long> convertFromIdentifierToRowAndCol(std::string identifier);
+        static TableCellPosition convertFromIdentifierToTablePosition(std::string identifier);
 
         static bool isOperator(char c);
 

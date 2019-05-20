@@ -20,7 +20,7 @@ namespace SheetsCore {
 
         std::string getCellValue(const std::string &identifier) const;
 
-        const TableCell &getCell(unsigned row, unsigned col) const;
+        const std::shared_ptr<TableCell> getCell(const TableCellPosition &position) const;
 
         std::vector<std::vector<std::string>> getAllCellValues() const;
 
