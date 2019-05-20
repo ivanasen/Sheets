@@ -18,7 +18,7 @@ namespace SheetsCore {
 
         std::string getCellValue(const TableCellPosition &position) const;
 
-        const std::shared_ptr<TableCell> getCell(const TableCellPosition &position) const;
+        const TableCell *getCell(const TableCellPosition &position) const;
 
         std::vector<std::vector<std::string>> getAllCellValues() const;
 
@@ -28,8 +28,10 @@ namespace SheetsCore {
 
         size_t getWidth() const;
 
+        ~Table();
+
     private:
-        std::vector<std::vector<std::shared_ptr<TableCell>>> _cells;
+        std::vector<std::vector<TableCell *>> _cells;
 
         void _resizeIfNeeded(size_t requiredHeight, size_t requiredWidth);
 

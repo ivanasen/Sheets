@@ -14,9 +14,9 @@ TEST_CASE("Table value setting and getting works correctly", "[Table]") {
 TEST_CASE("Table resizes when which is out of current bounds is set", "[Table]") {
     std::string expected = "Pesho";
     Table table(10, 10);
-    table.setCellValue(TableCellPosition(1000, 1000), expected);
+    table.setCellValue(TableCellPosition(Table::MAX_SIZE - 1, Table::MAX_SIZE - 1), expected);
 
-    REQUIRE(expected == table.getCellValue(TableCellPosition(1000, 1000)));
+    REQUIRE(expected == table.getCellValue(TableCellPosition(Table::MAX_SIZE - 1, Table::MAX_SIZE - 1)));
 }
 
 

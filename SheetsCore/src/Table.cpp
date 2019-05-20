@@ -30,7 +30,7 @@ namespace SheetsCore {
     }
 
     Table::Table(size_t initialHeight, size_t initialWidth)
-            : _cells(initialHeight, std::vector<std::shared_ptr<TableCell>>(initialWidth)) {
+            : _cells(initialHeight, std::vector<TableCell *>(initialWidth)) {
     }
 
     void Table::setCellValue(const TableCellPosition &position, const std::string &newCellValue) {
@@ -42,9 +42,9 @@ namespace SheetsCore {
         CellType newCellType = _determineCellType(newCellValue);
 
         if (newCellType == CellType::FORMULA) {
-            _cells[row][col] = std::make_shared<FormulaTableCell>(row, col, newCellValue, *this);
+            _cells[row][col] = new FormulaTableCell(row, col, newCellValue, *this);
         } else {
-            _cells[row][col] = std::make_shared<TableCell>(newCellType, newCellValue);
+            _cells[row][col] = new TableCell(newCellType, newCellValue);
         }
     }
 
@@ -59,7 +59,7 @@ namespace SheetsCore {
         }
 
         if ((_cells.empty() && requiredWidth > 0) || requiredWidth > _cells[0].size()) {
-            for (std::vector<std::shared_ptr<TableCell>> &row : _cells) {
+            for (std::vector<TableCell *> &row : _cells) {
                 row.resize(requiredWidth);
             }
         }
@@ -82,7 +82,7 @@ namespace SheetsCore {
         return result;
     }
 
-    const std::shared_ptr<TableCell> Table::getCell(const TableCellPosition &position) const {
+    const TableCell *Table::getCell(const TableCellPosition &position) const {
         return _cells[position.getRow()][position.getColumn()];
     }
 
@@ -104,6 +104,14 @@ namespace SheetsCore {
 
     size_t Table::getWidth() const {
         return _cells.empty() ? 0 : _cells[0].size();
+    }
+
+    Table::~Table() {
+        for (const std::vector<TableCell *> &rows : _cells) {
+            for (TableCell *cell : rows) {
+                delete cell;
+            }
+        }
     }
 
 }

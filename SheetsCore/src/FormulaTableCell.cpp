@@ -204,9 +204,9 @@ namespace SheetsCore {
 
             visited[pos.getRow()][pos.getColumn()] = true;
 
-            std::shared_ptr<TableCell> containedCell = _table.getCell(pos);
+            const TableCell *containedCell = _table.getCell(pos);
             if (containedCell != nullptr && containedCell->getType() == CellType::FORMULA) {
-                FormulaTableCell formula = *std::dynamic_pointer_cast<FormulaTableCell>(containedCell);
+                FormulaTableCell formula = *((FormulaTableCell *) containedCell);
                 _requireNoTableCellConflicts(formula);
             }
         }
