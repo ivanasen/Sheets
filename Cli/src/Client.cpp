@@ -31,7 +31,7 @@ namespace cli {
         _ostream << _cmdPrefix;
         do {
             getline(_istream, input);
-            Utils::Strings::trim(input);
+            utils::Strings::trim(input);
             if (!input.empty() && input != _quitCmd) {
                 onInput(input);
             }

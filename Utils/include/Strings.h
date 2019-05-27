@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-namespace Utils {
+namespace utils {
 
     class Strings {
     public:

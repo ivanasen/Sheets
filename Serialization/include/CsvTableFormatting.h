@@ -7,7 +7,7 @@ namespace serialization::csv {
 
     core::Table deserialize(std::istream &stream);
 
-    core::Table deserialize(std::string &string);
+    core::Table deserialize(std::string &serialized);
 
     void serialize(std::ostream &stream, const core::Table &table);
 

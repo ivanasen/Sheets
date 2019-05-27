@@ -26,7 +26,7 @@ namespace core {
     }
 
     TableCellPosition::TableCellPosition(std::string identifier) {
-        Utils::Strings::trim(identifier);
+        utils::Strings::trim(identifier);
 
         if (!isTableCellIdentifier(identifier)) {
             throw std::invalid_argument("Invalid table cell identifier: \"" + identifier + "\"");

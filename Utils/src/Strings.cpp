@@ -3,7 +3,7 @@
 #include <algorithm>
 #include "Strings.h"
 
-namespace Utils {
+namespace utils {
 
     void Strings::ltrim(std::string &string) {
         std::string::iterator endTrimPosition = string.begin();
@@ -98,7 +98,7 @@ namespace Utils {
                 return false;
             }
         }
-        return !s.empty();
+        return !trimmed.empty();
     }
 
     std::string Strings::toLowerCase(std::string string) {

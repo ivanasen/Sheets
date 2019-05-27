@@ -86,9 +86,9 @@ namespace core {
     }
 
     CellType Table::_determineCellType(const std::string &cellValue) {
-        if (Utils::Strings::isInteger(cellValue)) {
+        if (utils::Strings::isInteger(cellValue)) {
             return CellType::INTEGER;
-        } else if (Utils::Strings::isDecimal(cellValue)) {
+        } else if (utils::Strings::isDecimal(cellValue)) {
             return CellType::DECIMAL;
         } else if (ArithmeticFormulasUtils::isFormula(cellValue)) {
             return CellType::FORMULA;

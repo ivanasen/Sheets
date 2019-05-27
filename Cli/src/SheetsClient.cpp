@@ -8,7 +8,7 @@
 namespace cli {
 
     void SheetsClient::onInput(const std::string &input) {
-        std::string lowerInput = Utils::Strings::toLowerCase(input);
+        std::string lowerInput = utils::Strings::toLowerCase(input);
 
         if (lowerInput == Commands::PRINT) {
             _tableManager.prettyPrint();

@@ -69,7 +69,7 @@ namespace cli {
     }
 
     std::string TableManager::_formatCell(const std::string &cell) {
-        if (Utils::Strings::isDecimal(cell)) {
+        if (utils::Strings::isDecimal(cell)) {
             std::stringstream stream;
             stream << std::fixed << std::setprecision(2) << std::stod(cell);
             return stream.str();

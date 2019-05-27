@@ -211,7 +211,7 @@ namespace core {
 
     double FormulaTableCell::_getValueFromTable(const std::string &cellIdentifier) {
         std::string cellValue = _table.getCellValue(TableCellPosition(cellIdentifier));
-        if (Utils::Strings::isDecimal(cellValue)) {
+        if (utils::Strings::isDecimal(cellValue)) {
             return std::stod(cellValue);
         }
         return 0;

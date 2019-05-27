@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace Utils {
+namespace utils {
 
     class Log {
     public:
