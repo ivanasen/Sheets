@@ -1,7 +1,7 @@
 #include <catch.hpp>
 #include <Table.h>
 
-using namespace SheetsCore;
+using namespace core;
 
 TEST_CASE("Table value setting and getting works correctly", "[Table]") {
     std::string expected = "Pesho";

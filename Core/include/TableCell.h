@@ -4,12 +4,12 @@
 #include "../src/CellType.h"
 #include "../src/TableCellPosition.h"
 
-namespace SheetsCore {
+namespace core {
     class TableCell {
     public:
         TableCell();
 
-        explicit TableCell(CellType type, std::string value);
+        TableCell(CellType type, std::string value);
 
         TableCell(const TableCell &tableCell);
 

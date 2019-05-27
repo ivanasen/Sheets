@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace Cli {
+namespace cli {
 
     class Constants {
     public:

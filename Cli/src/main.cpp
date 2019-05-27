@@ -1,7 +1,10 @@
 #include <iostream>
 #include "SheetsClient.h"
+#include <iostream>
 
 int main() {
-    Cli::SheetsClient::init();
+    cli::SheetsClient client(std::cout, std::cin);
+    client.start();
+
     return 0;
 }

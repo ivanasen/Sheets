@@ -2,7 +2,7 @@
 
 #include "TableCell.h"
 
-namespace SheetsCore {
+namespace core {
     TableCell::TableCell() : _value(""), _type(CellType::STRING) {
     }
 

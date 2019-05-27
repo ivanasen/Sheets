@@ -1,6 +1,6 @@
 #pragma once
 
-namespace SheetsCore {
+namespace core {
 
     //Adding custom int type for enum, since TOKEN_VALUES isn't a map anymore, and we'll need to do casts everywhere
     enum class TokenType : int {

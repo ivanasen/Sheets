@@ -1,6 +1,6 @@
 #include "Token.h"
 
-namespace SheetsCore {
+namespace core {
 
 
     Token::Token(TokenType type, std::string value)

@@ -5,11 +5,11 @@
 #include "FormulaTableCell.h"
 #include "exceptions/TableCellRangeException.h"
 
-namespace SheetsCore {
+namespace core {
     const size_t Table::DEFAULT_INITIAL_HEIGHT = 10;
     const size_t Table::DEFAULT_INITIAL_WIDTH = 10;
     const size_t Table::MAX_SIZE = 1000;
-    const std::string Table::EMPTY_CELL_VALUE;
+    const std::string Table::EMPTY_CELL_VALUE = "";
     const std::string Table::ERROR_TABLE_CELL_VALUE = "Error";
 
     std::string Table::getCellValue(const TableCellPosition &position) const {
@@ -113,4 +113,21 @@ namespace SheetsCore {
         }
     }
 
+    std::vector<std::vector<std::string>> Table::getAllCellValuesWithoutFormulaCalculations() const {
+        std::vector<std::vector<std::string>> result(
+                _cells.size(),
+                std::vector<std::string>(_cells[0].size()));
+
+        for (int i = 0; i < result.size(); i++) {
+            for (int j = 0; j < result[0].size(); j++) {
+                if (_cells[i][j] != nullptr && _cells[i][j]->getType() == CellType::FORMULA) {
+                    result[i][j] = ((FormulaTableCell *) _cells[i][j])->getFormula();
+                } else {
+                    result[i][j] = getCellValue(TableCellPosition(i, j));
+                }
+            }
+        }
+
+        return result;
+    }
 }

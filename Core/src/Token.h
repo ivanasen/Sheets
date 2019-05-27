@@ -3,7 +3,7 @@
 #include <string>
 #include "TokenType.h"
 
-namespace SheetsCore {
+namespace core {
 
     struct Token {
         Token();

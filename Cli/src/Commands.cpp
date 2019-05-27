@@ -1,6 +1,6 @@
 #include "Commands.h"
 
-namespace Cli {
+namespace cli {
 
     const std::string Commands::PRINT = "print";
     const std::string Commands::EDIT = "edit";

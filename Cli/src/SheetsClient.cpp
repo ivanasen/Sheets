@@ -3,27 +3,24 @@
 #include "SheetsClient.h"
 #include "Commands.h"
 #include "Log.h"
+#include <iostream>
 
-namespace Cli {
-
-    void SheetsClient::init() {
-        SheetsClient client;
-        client.start();
-    }
+namespace cli {
 
     void SheetsClient::onInput(const std::string &input) {
         std::string lowerInput = Utils::Strings::toLowerCase(input);
 
         if (lowerInput == Commands::PRINT) {
-            _tableManager.print();
+            _tableManager.prettyPrint();
         } else if (lowerInput == Commands::EDIT) {
             _tableManager.edit();
         } else {
-            Utils::Log::i("Unknown command: " + input);
+            getOstream() << "Unknown command: " << std::endl;
         }
     }
 
-    SheetsClient::SheetsClient() : Client() {
+    SheetsClient::SheetsClient(std::ostream &ostream, std::istream &istream)
+            : Client(ostream, istream), _tableManager(ostream, istream) {
         setQuitMessage("Exiting Sheets...");
     }
 }

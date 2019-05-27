@@ -4,7 +4,7 @@
 #include "ArithmeticFormulasUtils.h"
 #include "Strings.h"
 
-namespace SheetsCore {
+namespace core {
 
     bool ArithmeticFormulasUtils::isFormula(const std::string &s) {
         return std::string(1, s[0]) == TOKEN_VALUES[(int) TokenType::EQUAL].value;

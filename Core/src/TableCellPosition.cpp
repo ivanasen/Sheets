@@ -8,7 +8,7 @@
 #include "TokenValues.h"
 #include "exceptions/TableCellRangeException.h"
 
-namespace SheetsCore {
+namespace core {
 
     const std::regex TableCellPosition::TABLE_CELL_FORMAT(
             "^"

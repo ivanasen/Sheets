@@ -4,13 +4,11 @@
 #include "TableManager.h"
 #include "Client.h"
 
-namespace Cli {
+namespace cli {
 
     class SheetsClient : public Client {
     public:
-        SheetsClient();
-
-        static void init();
+        SheetsClient(std::ostream &ostream, std::istream &istream);
 
     private:
         TableManager _tableManager;

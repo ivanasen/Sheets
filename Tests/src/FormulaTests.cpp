@@ -1,8 +1,8 @@
 #include <catch.hpp>
-#include "../../SheetsCore/src/Token.h"
-#include "../../SheetsCore/src/FormulaTableCell.h"
+#include <Table.h>
+#include <FormulaTableCell.h>
 
-using namespace SheetsCore;
+using namespace core;
 
 TEST_CASE("tokenizeFormula", "[FormulaTableCell]") {
     Table table;

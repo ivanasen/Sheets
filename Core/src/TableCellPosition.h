@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <regex>
 
-namespace SheetsCore {
+namespace core {
 
     class TableCellPosition {
     public:

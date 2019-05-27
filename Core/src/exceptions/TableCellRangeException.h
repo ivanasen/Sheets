@@ -3,7 +3,7 @@
 
 #include <stdexcept>
 
-namespace SheetsCore {
+namespace core {
 
     class TableCellRangeException : public std::invalid_argument {
     public:

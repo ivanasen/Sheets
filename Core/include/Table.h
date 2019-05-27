@@ -5,7 +5,7 @@
 #include <memory>
 #include "TableCell.h"
 
-namespace SheetsCore {
+namespace core {
     class Table {
     public:
         static const size_t DEFAULT_INITIAL_HEIGHT;
@@ -24,6 +24,8 @@ namespace SheetsCore {
 
         std::vector<std::vector<std::string>> getAllCellValues() const;
 
+        std::vector<std::vector<std::string>> getAllCellValuesWithoutFormulaCalculations() const;
+
         void setCellValue(const TableCellPosition &position, const std::string &newCellValue);
 
         size_t getHeight() const;
@@ -38,7 +40,6 @@ namespace SheetsCore {
         static CellType _determineCellType(const std::string &cellValue);
 
         void _resizeIfNotBigEnough(size_t height, size_t width);
-
 
     };
 }

@@ -3,7 +3,7 @@
 #include "TokenType.h"
 #include "Token.h"
 
-namespace SheetsCore {
+namespace core {
     //This should have been a map, but we can't use them, so....
     //Everywhere we use this now w=e need to cast TokenType to int, since we're using strict enums
     static std::vector<Token> TOKEN_VALUES{

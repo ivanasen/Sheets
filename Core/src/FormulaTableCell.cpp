@@ -7,7 +7,7 @@
 #include "TokenValues.h"
 #include <iostream>
 
-namespace SheetsCore {
+namespace core {
 
     FormulaTableCell::FormulaTableCell(
             size_t tableRow,

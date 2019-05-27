@@ -1,17 +1,22 @@
 #include <iostream>
 #include <iomanip>
 #include <Strings.h>
+#include <CsvTableFormatting.h>
 #include "TableManager.h"
 #include "Log.h"
 #include "Constants.h"
 
-namespace Cli {
+namespace cli {
 
-    void TableManager::print() {
+    TableManager::TableManager(std::ostream &ostream, std::istream &istream)
+            : _ostream(ostream), _istream(istream) {
+    }
+
+    void TableManager::prettyPrint() {
         std::vector<std::vector<std::string>> cells = _table.getAllCellValues();
 
         if (cells.empty()) {
-            Utils::Log::i("Table is empty.");
+            _ostream << "Table is empty." << std::endl;
             return;
         }
 
@@ -35,33 +40,32 @@ namespace Cli {
             for (size_t j = 0; j < cells[0].size(); j++) {
                 auto trailingSpacesCount = columnSizes[j] - cells[i][j].length() + 1;
                 std::string trailingSpaces = std::string(trailingSpacesCount, ' ');
-                std::cout << cells[i][j] << trailingSpaces << Constants::COLUMN_SEPARATOR;
+                _ostream << cells[i][j] << trailingSpaces << Constants::COLUMN_SEPARATOR;
             }
-            std::cout << std::endl;
+            _ostream << std::endl;
         }
-        std::cout << std::endl;
+        _ostream << std::endl;
     }
 
     void TableManager::edit() {
         std::string cell;
-        std::cout << "Enter cell number you\'d like to edit: ";
-        std::getline(std::cin, cell);
+        _ostream << "Enter cell number you\'d like to edit: ";
+        std::getline(_istream, cell);
 
         try {
-            SheetsCore::TableCellPosition position(cell);
+            core::TableCellPosition position(cell);
             std::string newCellValue;
-            std::cout << "New cell value: ";
-            std::getline(std::cin, newCellValue);
+            _ostream << "New cell value: ";
+            std::getline(_istream, newCellValue);
 
             try {
                 _table.setCellValue(position, newCellValue);
             } catch (const std::invalid_argument &e) {
-                std::cout << e.what() << std::endl;
+                _ostream << e.what() << std::endl;
             }
         } catch (const std::invalid_argument &e) {
-            Utils::Log::i(e.what());
+            _ostream << e.what() << std::endl;
         }
-
     }
 
     std::string TableManager::_formatCell(const std::string &cell) {
@@ -74,4 +78,12 @@ namespace Cli {
         return cell;
     }
 
+    void TableManager::serialize(std::ostream &ostream) {
+        std::string serialized = serialization::csv::serialize(_table);
+        ostream << serialized;
+    }
+
+    void TableManager::deserializeAndLoad(std::istream &istream) {
+        serialization::csv::deserialize(istream);
+    }
 }

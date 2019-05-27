@@ -6,21 +6,39 @@
 #include "Client.h"
 #include "Client.h"
 
-namespace Cli {
+namespace cli {
+
+
+    Client::Client(std::ostream &ostream, std::istream &istream)
+            : Client(ostream, istream, DEFAULT_CMD_PREFIX(), DEFAULT_QUIT_COMMAND(), DEFAULT_QUIT_MESSAGE()) {
+    }
+
+    Client::Client(
+            std::ostream &ostream,
+            std::istream &istream,
+            std::string commandPrefix,
+            std::string quitCommand,
+            std::string quitMessage)
+            : _ostream(ostream),
+              _istream(istream),
+              _cmdPrefix(std::move(commandPrefix)),
+              _quitCmd(std::move(quitCommand)),
+              _quitMsg(std::move(quitMessage)) {
+    }
 
     void Client::start() {
         std::string input;
-        std::cout << _cmdPrefix;
+        _ostream << _cmdPrefix;
         do {
-            getline(std::cin, input);
+            getline(_istream, input);
             Utils::Strings::trim(input);
             if (!input.empty() && input != _quitCmd) {
                 onInput(input);
             }
-            std::cout << _cmdPrefix;
+            _ostream << _cmdPrefix;
         } while (input != _quitCmd);
 
-        std::cout << _quitMsg << std::endl;
+        _ostream << _quitMsg << std::endl;
     }
 
     void Client::setCommandPrefix(const std::string &cmdPrefix) {
@@ -43,20 +61,20 @@ namespace Cli {
         return "Exiting the program...";
     }
 
-    Client::Client()
-            : _cmdPrefix(DEFAULT_CMD_PREFIX()), _quitCmd(DEFAULT_QUIT_COMMAND()), _quitMsg(DEFAULT_QUIT_MESSAGE()) {
-    }
-
-    Client::Client(std::string commandPrefix, std::string quitCommand, std::string quitMessage)
-            : _cmdPrefix(std::move(commandPrefix)), _quitCmd(std::move(quitCommand)), _quitMsg(std::move(quitMessage)) {
-    }
-
     void Client::setQuitMessage(const std::string &quitMessage) {
         _quitMsg = quitMessage;
     }
 
     std::string Client::getExitMessage() {
         return _quitMsg;
+    }
+
+    std::ostream &Client::getOstream() {
+        return _ostream;
+    }
+
+    std::istream &Client::getIstream() {
+        return _istream;
     }
 
 }

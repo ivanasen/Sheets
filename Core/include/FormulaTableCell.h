@@ -2,10 +2,10 @@
 
 #include <Table.h>
 #include "TableCell.h"
-#include "Token.h"
-#include "TableCellPosition.h"
+#include "../src/Token.h"
+#include "../src/TableCellPosition.h"
 
-namespace SheetsCore {
+namespace core {
 
     class FormulaTableCell : public TableCell {
     public:

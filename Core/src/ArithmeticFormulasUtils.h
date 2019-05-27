@@ -4,7 +4,7 @@
 #include "Token.h"
 #include "TableCellPosition.h"
 
-namespace SheetsCore {
+namespace core {
     class ArithmeticFormulasUtils {
     public:
         static bool isTableCellIdentifier(const std::string &s);

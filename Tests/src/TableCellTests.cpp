@@ -1,7 +1,7 @@
 #include <catch.hpp>
 #include <TableCell.h>
 
-using namespace SheetsCore;
+using namespace core;
 
 TEST_CASE("TableCell works correctly", "[TableCell]") {
     std::string value = "Pesho";

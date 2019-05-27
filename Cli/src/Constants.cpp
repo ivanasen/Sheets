@@ -1,6 +1,6 @@
 #include "Constants.h"
 
-namespace Cli {
+namespace cli {
     const std::string Constants::COLUMN_SEPARATOR = "|";
 
     const char Constants::DECIMAL_SEPARATOR = '.';

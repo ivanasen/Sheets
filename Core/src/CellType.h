@@ -1,6 +1,6 @@
 #pragma once
 
-namespace SheetsCore {
+namespace core {
     enum class CellType {
         INTEGER, DECIMAL, FORMULA, STRING
     };

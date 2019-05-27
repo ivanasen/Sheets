@@ -2,18 +2,24 @@
 
 #include <Table.h>
 
-namespace Cli {
+namespace cli {
 
     class TableManager {
     public:
-        void print();
+        TableManager(std::ostream &ostream, std::istream &istream);
+
+        void prettyPrint();
 
         void edit();
 
-    private:
-        SheetsCore::Table _table;
+        void serialize(std::ostream &ostream);
 
-        void _printTable(const SheetsCore::Table &table);
+        void deserializeAndLoad(std::istream &istream);
+
+    private:
+        core::Table _table;
+        std::ostream &_ostream;
+        std::istream &_istream;
 
         static std::string _formatCell(const std::string &cellValue);
     };
