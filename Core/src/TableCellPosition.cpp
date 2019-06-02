@@ -74,6 +74,7 @@ namespace core {
     }
 
     bool TableCellPosition::isTableCellIdentifier(const std::string &s) {
-        return std::regex_match(s, TABLE_CELL_FORMAT);
+        std::string upperCase = utils::Strings::toUpperCase(s);
+        return std::regex_match(upperCase, TABLE_CELL_FORMAT);
     }
 }

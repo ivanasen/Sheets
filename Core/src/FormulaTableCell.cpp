@@ -24,7 +24,8 @@ namespace core {
 
     std::string FormulaTableCell::getDisplayValue() {
         double result = _calculate();
-        return std::to_string(result);
+        std::string formattedResult = utils::Strings::formatAsDisplayDecimalValue(result);
+        return formattedResult;
     }
 
     std::string FormulaTableCell::getValue() {
@@ -97,7 +98,7 @@ namespace core {
                 _tokenizedFormula.push_back(TOKEN_VALUES[(int) TokenType::OPENING_PARENTHESIS]);
             } else if (formula[i] == closingParenthesis) {
                 _tokenizedFormula.push_back(TOKEN_VALUES[(int) TokenType::CLOSING_PARENTHESIS]);
-            } else if (formula[i] == rowIdentifier) {
+            } else if (toupper(formula[i]) == rowIdentifier) {
                 Token token = ArithmeticFormulasUtils::extractPotentialIdentifierToken(toBeExtractedFrom);
                 _tokenizedFormula.push_back(token);
                 i += token.value.size() - 1;

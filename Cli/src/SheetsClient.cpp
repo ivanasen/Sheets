@@ -12,35 +12,59 @@ namespace cli {
         setQuitMessage("Exiting Sheets...");
     }
 
-    void SheetsClient::onInput(const std::string &input) {
-        std::string trimmed = utils::Strings::trim(input);
-        std::vector<std::string> separatedInput = utils::Strings::splitBySpaces(input, 2);
+    void SheetsClient::_onInput(const std::string &input) {
+        std::vector<std::string> separatedInput = _separateInput(input);
 
         if (separatedInput.empty()) {
             return;
         }
 
         std::string command = separatedInput[0];
-        std::string lowerCaseCmd = utils::Strings::toLowerCase(command);
-
         separatedInput.erase(separatedInput.begin());
+        std::string lowerCaseCmd = utils::Strings::toLowerCase(command);
 
         try {
             if (lowerCaseCmd == Commands::PRINT) {
-                _tableManager.prettyPrint();
+                _handlePrint();
             } else if (lowerCaseCmd == Commands::EDIT) {
-                _tableManager.edit(separatedInput);
+                _handleEdit(separatedInput);
             } else if (lowerCaseCmd == Commands::OPEN) {
-                //Open
+                _handleOpen(separatedInput);
             } else if (lowerCaseCmd == Commands::SAVE) {
-                //Save
+                _handleSave();
             } else if (lowerCaseCmd == Commands::SAVE_AS) {
-                //Save as
+                _handleSaveAs(separatedInput);
             } else {
                 getOstream() << "Unknown command: " << command << std::endl;
             }
         } catch (const std::invalid_argument &e) {
             getOstream() << e.what() << std::endl;
         }
+    }
+
+    std::vector<std::string> SheetsClient::_separateInput(const std::string &input) {
+        std::string trimmed = utils::Strings::trim(input);
+        std::vector<std::string> separatedInput = utils::Strings::splitBySpaces(input, 2);
+        return separatedInput;
+    }
+
+    void SheetsClient::_handlePrint() {
+        _tableManager.prettyPrint();
+    }
+
+    void SheetsClient::_handleEdit(const std::vector<std::string> &input) {
+        _tableManager.edit(input);
+    }
+
+    void SheetsClient::_handleOpen(const std::vector<std::string> &input) {
+        //Open
+    }
+
+    void SheetsClient::_handleSave() {
+        //Save
+    }
+
+    void SheetsClient::_handleSaveAs(const std::vector<std::string> &input) {
+        //Save as
     }
 }

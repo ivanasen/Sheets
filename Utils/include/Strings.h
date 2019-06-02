@@ -36,6 +36,8 @@ namespace utils {
 
         static bool ignoreCaseEquals(const std::string &a, const std::string &b);
 
+        static std::string formatAsDisplayDecimalValue(double value);
+
     private:
         static const std::unordered_set<char> ESCAPE_CHARS;
     };

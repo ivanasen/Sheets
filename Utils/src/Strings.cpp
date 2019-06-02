@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <iomanip>
 #include "Strings.h"
 
 namespace utils {
@@ -230,6 +231,12 @@ namespace utils {
                           [](char a, char b) {
                               return tolower(a) == tolower(b);
                           });
+    }
+
+    std::string Strings::formatAsDisplayDecimalValue(double value) {
+        std::stringstream stream;
+        stream << std::fixed << std::setprecision(2) << value;
+        return stream.str();
     }
 
 }

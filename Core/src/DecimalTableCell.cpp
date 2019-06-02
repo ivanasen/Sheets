@@ -1,4 +1,5 @@
 #include <iomanip>
+#include <Strings.h>
 #include "DecimalTableCell.h"
 
 namespace core {
@@ -27,8 +28,6 @@ namespace core {
     DecimalTableCell::~DecimalTableCell() = default;
 
     void DecimalTableCell::_formatValue() {
-        std::stringstream stream;
-        stream << std::fixed << std::setprecision(2) << _value;
-        _formattedValue = stream.str();
+        _formattedValue = utils::Strings::formatAsDisplayDecimalValue(_value);
     }
 }
