@@ -6,9 +6,7 @@ namespace cli {
 
     class TableManager {
     public:
-        TableManager(std::ostream &ostream, std::istream &istream);
-
-        void prettyPrint();
+        std::string getPrettyTable();
 
         void edit(const std::vector<std::string> &args);
 
@@ -18,8 +16,6 @@ namespace cli {
 
     private:
         core::Table _table;
-        std::ostream &_ostream;
-        std::istream &_istream;
     };
 
 }

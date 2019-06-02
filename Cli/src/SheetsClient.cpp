@@ -8,7 +8,7 @@
 namespace cli {
 
     SheetsClient::SheetsClient(std::ostream &ostream, std::istream &istream)
-            : Client(ostream, istream), _tableManager(ostream, istream) {
+            : Client(ostream, istream) {
         setQuitMessage("Exiting Sheets...");
     }
 
@@ -49,7 +49,7 @@ namespace cli {
     }
 
     void SheetsClient::_handlePrint() {
-        _tableManager.prettyPrint();
+        getOstream() << _tableManager.getPrettyTable();
     }
 
     void SheetsClient::_handleEdit(const std::vector<std::string> &input) {

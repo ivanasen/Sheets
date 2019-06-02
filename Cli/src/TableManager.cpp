@@ -8,16 +8,13 @@
 
 namespace cli {
 
-    TableManager::TableManager(std::ostream &ostream, std::istream &istream)
-            : _ostream(ostream), _istream(istream) {
-    }
-
-    void TableManager::prettyPrint() {
+    std::string TableManager::getPrettyTable() {
+        std::stringstream stream;
         std::vector<std::vector<std::string>> cells = _table.getAllCellDisplayValues();
 
         if (cells.empty()) {
-            _ostream << "Table is empty." << std::endl;
-            return;
+            stream << "Table is empty." << std::endl;
+            return stream.str();
         }
 
         std::vector<unsigned long> columnSizes(cells[0].size());
@@ -34,11 +31,13 @@ namespace cli {
             for (size_t j = 0; j < cells[0].size(); j++) {
                 auto trailingSpacesCount = columnSizes[j] - cells[i][j].length() + 1;
                 std::string trailingSpaces = std::string(trailingSpacesCount, ' ');
-                _ostream << cells[i][j] << trailingSpaces << Constants::COLUMN_SEPARATOR;
+                stream << cells[i][j] << trailingSpaces << Constants::COLUMN_SEPARATOR;
             }
-            _ostream << std::endl;
+            stream << std::endl;
         }
-        _ostream << std::endl;
+        stream << std::endl;
+
+        return stream.str();
     }
 
     void TableManager::edit(const std::vector<std::string> &args) {
