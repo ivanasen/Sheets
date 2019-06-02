@@ -3,7 +3,7 @@ project(Core)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(SOURCE_FILES src/Table.cpp include/Table.h src/CellType.h src/TokenType.h src/TokenValues.h src/Token.cpp src/Token.h src/TableCell.cpp src/ArithmeticFormulasUtils.cpp src/ArithmeticFormulasUtils.h src/FormulaTableCell.cpp src/TableCellPosition.cpp src/TableCellPosition.h src/exceptions/TableCellRangeException.cpp src/exceptions/TableCellRangeException.h)
+set(SOURCE_FILES src/Table.cpp include/Table.h src/CellType.h src/TokenType.h src/TokenValues.h src/Token.cpp src/Token.h src/ArithmeticFormulasUtils.cpp src/ArithmeticFormulasUtils.h src/FormulaTableCell.cpp src/TableCellPosition.cpp src/TableCellPosition.h src/exceptions/TableCellRangeException.cpp src/exceptions/TableCellRangeException.h src/DecimalTableCell.cpp src/DecimalTableCell.h src/IntegerTableCell.cpp src/IntegerTableCell.h src/StringTableCell.cpp src/StringTableCell.h)
 
 include_directories(${PROJECT_SOURCE_DIR}/include/)
 

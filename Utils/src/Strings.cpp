@@ -5,6 +5,10 @@
 
 namespace utils {
 
+    const std::unordered_set<char> Strings::ESCAPE_CHARS = {
+            '\'', '"', '?', '\\', '\a', '\b', '\f', '\n', '\r', '\t', '\v'
+    };
+
     void Strings::ltrim(std::string &string) {
         std::string::iterator endTrimPosition = string.begin();
 
@@ -77,7 +81,7 @@ namespace utils {
                 return false;
             }
         }
-        return true;
+        return !trimmed.empty();
     }
 
     bool Strings::isDecimal(const std::string &s) {
@@ -105,6 +109,41 @@ namespace utils {
         std::string copy = std::move(string);
         std::transform(copy.begin(), copy.end(), copy.begin(), ::tolower);
         return copy;
+    }
+
+    std::string Strings::escape(const std::string &s) {
+        std::string escaped;
+
+        for (char c : s) {
+            if (ESCAPE_CHARS.count(c)) {
+                escaped += "\\";
+            }
+            escaped += c;
+        }
+
+        return escaped;
+    }
+
+    std::string Strings::unescape(const std::string &s) {
+        std::string unescaped;
+
+        for (size_t i = 0; i < s.size(); i++) {
+            if (i == 0 && s[0] == '\"') {
+                continue;
+            } else if (i == s.size() - 1 && s[i] == '\"') {
+                continue;
+            } else if (s[i] == '\\') {
+                continue;
+            }
+
+            unescaped += s[i];
+        }
+
+        return unescaped;
+    }
+
+    std::string Strings::addQuotes(const std::string &s) {
+        return "\"" + s + "\"";
     }
 
 }

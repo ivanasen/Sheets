@@ -13,17 +13,11 @@ namespace cli {
     }
 
     void TableManager::prettyPrint() {
-        std::vector<std::vector<std::string>> cells = _table.getAllCellValues();
+        std::vector<std::vector<std::string>> cells = _table.getAllCellDisplayValues();
 
         if (cells.empty()) {
             _ostream << "Table is empty." << std::endl;
             return;
-        }
-
-        for (std::vector<std::string> &rows : cells) {
-            for (std::string &cell : rows) {
-                cell = _formatCell(cell);
-            }
         }
 
         std::vector<unsigned long> columnSizes(cells[0].size());
@@ -66,16 +60,6 @@ namespace cli {
         } catch (const std::invalid_argument &e) {
             _ostream << e.what() << std::endl;
         }
-    }
-
-    std::string TableManager::_formatCell(const std::string &cell) {
-        if (utils::Strings::isDecimal(cell)) {
-            std::stringstream stream;
-            stream << std::fixed << std::setprecision(2) << std::stod(cell);
-            return stream.str();
-        }
-
-        return cell;
     }
 
     void TableManager::serialize(std::ostream &ostream) {

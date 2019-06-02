@@ -13,4 +13,5 @@ namespace serialization::csv {
 
     std::string serialize(const core::Table &table);
 
+    std::string extract(std::istream &istream, char previousChar);
 }

@@ -1,10 +1,11 @@
 #include <catch.hpp>
 #include <TableCell.h>
+#include "../../Core/src/StringTableCell.h"
 
 using namespace core;
 
 TEST_CASE("TableCell works correctly", "[TableCell]") {
     std::string value = "Pesho";
-    TableCell cell(CellType::STRING, value);
-    REQUIRE(value == cell.getValue());
+    StringTableCell cell(value);
+    REQUIRE(value == cell.getDisplayValue());
 }

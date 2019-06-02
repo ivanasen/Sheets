@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_set>
 
 namespace utils {
 
@@ -22,6 +23,15 @@ namespace utils {
         static bool isDecimal(const std::string &s);
 
         static std::string toLowerCase(std::string string);
+
+        static std::string escape(const std::string &s);
+
+        static std::string unescape(const std::string &s);
+
+        static std::string addQuotes(const std::string &s);
+
+    private:
+        static const std::unordered_set<char> ESCAPE_CHARS;
     };
 
 }

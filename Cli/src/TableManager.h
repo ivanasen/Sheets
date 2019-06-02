@@ -20,8 +20,6 @@ namespace cli {
         core::Table _table;
         std::ostream &_ostream;
         std::istream &_istream;
-
-        static std::string _formatCell(const std::string &cellValue);
     };
 
 }

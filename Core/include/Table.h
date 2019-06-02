@@ -18,13 +18,13 @@ namespace core {
 
         Table(size_t initialHeight, size_t initialWidth);
 
-        std::string getCellValue(const TableCellPosition &position) const;
+        std::string getCellDisplayValue(const TableCellPosition &position) const;
 
         const TableCell *getCell(const TableCellPosition &position) const;
 
-        std::vector<std::vector<std::string>> getAllCellValues() const;
+        std::vector<std::vector<std::string>> getAllCellDisplayValues() const;
 
-        std::vector<std::vector<std::string>> getAllCellValuesWithoutFormulaCalculations() const;
+        std::vector<std::vector<std::string>> getAllCellValues() const;
 
         void setCellValue(const TableCellPosition &position, const std::string &newCellValue);
 

@@ -9,17 +9,25 @@ namespace core {
 
     class FormulaTableCell : public TableCell {
     public:
-        explicit FormulaTableCell(size_t tableRow, size_t tableColumn, std::string formula, const Table &table);
+        explicit FormulaTableCell(
+                std::string formula,
+                TableCellPosition tablePosition,
+                const Table &table);
+
+        std::string getDisplayValue() override;
 
         std::string getValue() override;
 
-        std::string getFormula();
+        std::vector<TableCellPosition> getTablePositionDependencies() const;
 
-        std::vector<TableCellPosition> getContainedTableCellPositions() const;
+        CellType getType() const override;
+
+        ~FormulaTableCell() override;
 
     private:
         TableCellPosition _tableCellPosition;
         const Table &_table;
+        std::string _formula;
         std::vector<Token> _tokenizedFormula;
         std::vector<TableCellPosition> _tableCells;
         std::vector<unsigned long> _bracketMatches;

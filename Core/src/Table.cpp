@@ -4,6 +4,9 @@
 #include "TokenValues.h"
 #include "FormulaTableCell.h"
 #include "exceptions/TableCellRangeException.h"
+#include "DecimalTableCell.h"
+#include "IntegerTableCell.h"
+#include "StringTableCell.h"
 
 namespace core {
     const size_t Table::DEFAULT_INITIAL_HEIGHT = 10;
@@ -12,7 +15,14 @@ namespace core {
     const std::string Table::EMPTY_CELL_VALUE = "";
     const std::string Table::ERROR_TABLE_CELL_VALUE = "Error";
 
-    std::string Table::getCellValue(const TableCellPosition &position) const {
+    Table::Table(size_t initialHeight, size_t initialWidth)
+            : _cells(initialHeight, std::vector<TableCell *>(initialWidth)) {
+    }
+
+    Table::Table() : Table(DEFAULT_INITIAL_HEIGHT, DEFAULT_INITIAL_WIDTH) {
+    }
+
+    std::string Table::getCellDisplayValue(const TableCellPosition &position) const {
         size_t row = position.getRow();
         size_t col = position.getColumn();
 
@@ -23,14 +33,10 @@ namespace core {
         }
 
         try {
-            return _cells[row][col]->getValue();
+            return _cells[row][col]->getDisplayValue();
         } catch (const std::invalid_argument &e) {
             return ERROR_TABLE_CELL_VALUE;
         }
-    }
-
-    Table::Table(size_t initialHeight, size_t initialWidth)
-            : _cells(initialHeight, std::vector<TableCell *>(initialWidth)) {
     }
 
     void Table::setCellValue(const TableCellPosition &position, const std::string &newCellValue) {
@@ -41,40 +47,38 @@ namespace core {
 
         CellType newCellType = _determineCellType(newCellValue);
 
-        if (newCellType == CellType::FORMULA) {
-            _cells[row][col] = new FormulaTableCell(row, col, newCellValue, *this);
-        } else {
-            _cells[row][col] = new TableCell(newCellType, newCellValue);
+        switch (newCellType) {
+            case CellType::FORMULA:
+                _cells[row][col] = new FormulaTableCell(newCellValue, position, *this);
+                break;
+
+            case CellType::DECIMAL:
+                _cells[row][col] = new DecimalTableCell(std::stod(newCellValue));
+                break;
+
+            case CellType::INTEGER:
+                _cells[row][col] = new IntegerTableCell(std::stoi(newCellValue));
+                break;
+
+            case CellType::STRING:
+                _cells[row][col] = new StringTableCell(newCellValue);
+                break;
+
+            default:
+                throw std::invalid_argument("Invalid cell type");
         }
     }
 
-    void Table::_resizeIfNotBigEnough(size_t height, size_t width) {
-        if (height > MAX_SIZE || width > MAX_SIZE) {
-            throw TableCellRangeException();
-        }
-
-        if (height > _cells.size()) {
-            _cells.resize(height);
-        }
-
-        if ((_cells.empty() && width > 0) || width > _cells[0].size()) {
-            for (std::vector<TableCell *> &row : _cells) {
-                row.resize(width);
-            }
-        }
-    }
-
-    Table::Table() : Table(DEFAULT_INITIAL_HEIGHT, DEFAULT_INITIAL_WIDTH) {
-    }
-
-    std::vector<std::vector<std::string>> Table::getAllCellValues() const {
+    std::vector<std::vector<std::string>> Table::getAllCellDisplayValues() const {
         std::vector<std::vector<std::string>> result(
                 _cells.size(),
                 std::vector<std::string>(_cells[0].size()));
 
         for (int i = 0; i < result.size(); i++) {
             for (int j = 0; j < result[0].size(); j++) {
-                result[i][j] = getCellValue(TableCellPosition(i, j));
+                if (_cells[i][j] != nullptr) {
+                    result[i][j] = _cells[i][j]->getDisplayValue();
+                }
             }
         }
 
@@ -83,18 +87,6 @@ namespace core {
 
     const TableCell *Table::getCell(const TableCellPosition &position) const {
         return _cells[position.getRow()][position.getColumn()];
-    }
-
-    CellType Table::_determineCellType(const std::string &cellValue) {
-        if (utils::Strings::isInteger(cellValue)) {
-            return CellType::INTEGER;
-        } else if (utils::Strings::isDecimal(cellValue)) {
-            return CellType::DECIMAL;
-        } else if (ArithmeticFormulasUtils::isFormula(cellValue)) {
-            return CellType::FORMULA;
-        } else {
-            return CellType::STRING;
-        }
     }
 
     size_t Table::getHeight() const {
@@ -113,21 +105,47 @@ namespace core {
         }
     }
 
-    std::vector<std::vector<std::string>> Table::getAllCellValuesWithoutFormulaCalculations() const {
+    std::vector<std::vector<std::string>> Table::getAllCellValues() const {
         std::vector<std::vector<std::string>> result(
                 _cells.size(),
                 std::vector<std::string>(_cells[0].size()));
 
         for (int i = 0; i < result.size(); i++) {
             for (int j = 0; j < result[0].size(); j++) {
-                if (_cells[i][j] != nullptr && _cells[i][j]->getType() == CellType::FORMULA) {
-                    result[i][j] = ((FormulaTableCell *) _cells[i][j])->getFormula();
-                } else {
-                    result[i][j] = getCellValue(TableCellPosition(i, j));
+                if (_cells[i][j] != nullptr) {
+                    result[i][j] = _cells[i][j]->getValue();
                 }
             }
         }
 
         return result;
+    }
+
+    void Table::_resizeIfNotBigEnough(size_t height, size_t width) {
+        if (height > MAX_SIZE || width > MAX_SIZE) {
+            throw TableCellRangeException();
+        }
+
+        if (height > _cells.size()) {
+            _cells.resize(height);
+        }
+
+        if ((_cells.empty() && width > 0) || width > _cells[0].size()) {
+            for (std::vector<TableCell *> &row : _cells) {
+                row.resize(width);
+            }
+        }
+    }
+
+    CellType Table::_determineCellType(const std::string &cellValue) {
+        if (utils::Strings::isInteger(cellValue)) {
+            return CellType::INTEGER;
+        } else if (utils::Strings::isDecimal(cellValue)) {
+            return CellType::DECIMAL;
+        } else if (ArithmeticFormulasUtils::isFormula(cellValue)) {
+            return CellType::FORMULA;
+        } else {
+            return CellType::STRING;
+        }
     }
 }

@@ -7,21 +7,13 @@
 namespace core {
     class TableCell {
     public:
-        TableCell();
+        virtual std::string getDisplayValue() = 0;
 
-        TableCell(CellType type, std::string value);
+        virtual std::string getValue() = 0;
 
-        TableCell(const TableCell &tableCell);
-
-        virtual std::string getValue();
-
-        CellType getType() const;
+        virtual CellType getType() const = 0;
 
         virtual ~TableCell() = default;
-
-    private:
-        std::string _value;
-        CellType _type;
     };
 }
 
