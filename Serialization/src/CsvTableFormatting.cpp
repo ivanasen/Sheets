@@ -3,9 +3,6 @@
 #include "CsvTableFormatting.h"
 
 namespace serialization::csv {
-    std::string extractNumber(std::istream &istream, char i);
-
-    std::string extractFormula(std::istream &istream);
 
     core::Table deserialize(std::istream &stream) {
         core::Table table;

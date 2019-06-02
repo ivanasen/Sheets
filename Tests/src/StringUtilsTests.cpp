@@ -17,3 +17,11 @@ TEST_CASE("String escaping works correctly", "[StringUtils]") {
     std::string s1Escaped = utils::Strings::escape(s1);
     REQUIRE(expected1 == s1Escaped);
 }
+
+TEST_CASE("String unescaping works correctly", "[StringUtils]") {
+    std::string s1 = "Pesho,\\\" Gosho \\\n \\\t";
+    std::string expected = "Pesho,\" Gosho \n \t";
+    std::string s1Unescaped = utils::Strings::unescape(s1);
+    REQUIRE(expected == s1Unescaped);
+}
+
