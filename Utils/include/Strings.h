@@ -14,7 +14,7 @@ namespace utils {
 
         static std::string trim(std::string string);
 
-        static std::vector<std::string> splitBySpaces(const std::string &string, int maxSplitAmount);
+        static std::vector<std::string> splitBySpaces(const std::string &string, int maxSplitAmount = -1);
 
         static std::vector<std::string> split(const std::string &string, char separator);
 

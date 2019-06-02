@@ -36,7 +36,7 @@ namespace utils {
         return string;
     }
 
-    std::vector<std::string> Strings::splitBySpaces(const std::string &string, int maxSplitAmount = -1) {
+    std::vector<std::string> Strings::splitBySpaces(const std::string &string, int maxSplitAmount) {
         int splitAmount = 0;
         std::vector<std::string> separated;
         auto iterator = string.begin();
