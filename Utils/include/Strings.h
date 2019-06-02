@@ -30,6 +30,8 @@ namespace utils {
 
         static std::string addQuotes(const std::string &s);
 
+        static std::string removeQuotes(const std::string &s);
+
     private:
         static const std::unordered_set<char> ESCAPE_CHARS;
     };

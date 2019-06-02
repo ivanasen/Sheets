@@ -4,7 +4,7 @@
 namespace core {
 
     core::StringTableCell::StringTableCell(const std::string &value) {
-        _value = utils::Strings::unescape(value);
+        _value = value;
         _escapedValue = utils::Strings::addQuotes(utils::Strings::escape(value));
     }
 

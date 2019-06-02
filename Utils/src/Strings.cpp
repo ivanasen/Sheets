@@ -6,7 +6,7 @@
 namespace utils {
 
     const std::unordered_set<char> Strings::ESCAPE_CHARS = {
-            '\'', '"', '?', '\\', '\a', '\b', '\f', '\n', '\r', '\t', '\v'
+            '"', '\\', '\n', '\t'
     };
 
     void Strings::ltrim(std::string &string) {
@@ -117,8 +117,17 @@ namespace utils {
         for (char c : s) {
             if (ESCAPE_CHARS.count(c)) {
                 escaped += "\\";
+
+                if (c == '\n') {
+                    escaped += 'n';
+                } else if (c == '\t') {
+                    escaped += 't';
+                } else {
+                    escaped += c;
+                }
+            } else {
+                escaped += c;
             }
-            escaped += c;
         }
 
         return escaped;
@@ -128,15 +137,23 @@ namespace utils {
         std::string unescaped;
 
         for (size_t i = 0; i < s.size(); i++) {
-            if (i == 0 && s[0] == '\"') {
-                continue;
-            } else if (i == s.size() - 1 && s[i] == '\"') {
-                continue;
-            } else if (s[i] == '\\') {
-                continue;
-            }
 
-            unescaped += s[i];
+            if (s[i] == '\\' && i < s.size() - 1) {
+                i++;
+
+                switch (s[i]) {
+                    case 'n':
+                        unescaped += '\n';
+                        break;
+                    case 't':
+                        unescaped += '\t';
+                        break;
+                    default:
+                        unescaped += s[i];
+                }
+            } else {
+                unescaped += s[i];
+            }
         }
 
         return unescaped;
@@ -144,6 +161,51 @@ namespace utils {
 
     std::string Strings::addQuotes(const std::string &s) {
         return "\"" + s + "\"";
+    }
+
+    std::string Strings::removeQuotes(const std::string &s) {
+        if (s.size() < 2) {
+            return s;
+        }
+
+        std::string noQuotes;
+        long startQuotesIndex = 0;
+        bool foundStartQuotes = false;
+        while (startQuotesIndex < s.size()
+               && (s[startQuotesIndex] == ' '
+                   || !foundStartQuotes)) {
+            if (s[startQuotesIndex] == '"') {
+                foundStartQuotes = true;
+            } else {
+                startQuotesIndex++;
+            }
+        }
+
+        if (startQuotesIndex == s.size() - 1) {
+            return s;
+        }
+
+        long endQuotesIndex = s.size() - 1;
+        bool foundEndQuotes = false;
+        while (endQuotesIndex >= 0
+               && (s[endQuotesIndex] == ' '
+                   || !foundEndQuotes)) {
+            if (s[endQuotesIndex] == '"') {
+                foundEndQuotes = true;
+            } else {
+                endQuotesIndex--;
+            }
+        }
+
+        if (startQuotesIndex == endQuotesIndex) {
+            return s;
+        }
+
+        if (foundStartQuotes && foundEndQuotes) {
+            return s.substr(startQuotesIndex + 1, endQuotesIndex - startQuotesIndex - 1);
+        } else {
+            return s;
+        }
     }
 
 }

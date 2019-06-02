@@ -10,3 +10,10 @@ TEST_CASE("splitBySpaces works correctly", "[StringUtils]") {
     REQUIRE(split1[3] == "sit");
     REQUIRE(split1[4] == "amet");
 }
+
+TEST_CASE("String escaping works correctly", "[StringUtils]") {
+    std::string s1 = "Hello, \"World!?\" \n \t";
+    std::string expected1 = R"(Hello, \"World!?\" \n \t)";
+    std::string s1Escaped = utils::Strings::escape(s1);
+    REQUIRE(expected1 == s1Escaped);
+}

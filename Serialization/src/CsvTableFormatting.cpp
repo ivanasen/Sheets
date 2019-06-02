@@ -31,7 +31,8 @@ namespace serialization::csv {
                 streamCol++;
             } else {
                 std::string extracted = extract(stream, c);
-                table.setCellValue(core::TableCellPosition(tableRow, tableCol), extracted);
+                std::string unescaped = utils::Strings::removeQuotes(utils::Strings::unescape(extracted));
+                table.setCellValue(core::TableCellPosition(tableRow, tableCol), unescaped);
                 tableCol++;
             }
         }
