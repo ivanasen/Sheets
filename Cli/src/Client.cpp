@@ -10,7 +10,11 @@ namespace cli {
 
 
     Client::Client(std::ostream &ostream, std::istream &istream)
-            : Client(ostream, istream, DEFAULT_CMD_PREFIX(), DEFAULT_QUIT_COMMAND(), DEFAULT_QUIT_MESSAGE()) {
+            : Client(ostream,
+                     istream,
+                     DEFAULT_CMD_PREFIX(),
+                     DEFAULT_QUIT_COMMAND(),
+                     DEFAULT_QUIT_MESSAGE()) {
     }
 
     Client::Client(
@@ -31,7 +35,7 @@ namespace cli {
         _ostream << _cmdPrefix;
         do {
             getline(_istream, input);
-            utils::Strings::trim(input);
+            input = utils::Strings::trim(input);
             if (!input.empty() && input != _quitCmd) {
                 onInput(input);
             }

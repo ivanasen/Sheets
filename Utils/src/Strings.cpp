@@ -29,12 +29,14 @@ namespace utils {
         }
     }
 
-    void Strings::trim(std::string &string) {
+    std::string Strings::trim(std::string string) {
         ltrim(string);
         rtrim(string);
+        return string;
     }
 
-    std::vector<std::string> Strings::splitBySpaces(const std::string &string) {
+    std::vector<std::string> Strings::splitBySpaces(const std::string &string, int maxSplitAmount = -1) {
+        int splitAmount = 0;
         std::vector<std::string> separated;
         auto iterator = string.begin();
 
@@ -43,10 +45,19 @@ namespace utils {
                 iterator++;
             } else {
                 std::string newElement;
-                while (iterator != string.end() && !std::isspace(*iterator)) {
-                    newElement.push_back(*(iterator++));
+
+                if (splitAmount == maxSplitAmount) {
+                    while (iterator != string.end()) {
+                        newElement.push_back(*(iterator++));
+                    }
+                } else {
+                    while (iterator != string.end() && !std::isspace(*iterator)) {
+                        newElement.push_back(*(iterator++));
+                    }
                 }
+
                 separated.push_back(newElement);
+                splitAmount++;
             }
         }
 
@@ -73,8 +84,7 @@ namespace utils {
     }
 
     bool Strings::isInteger(const std::string &s) {
-        std::string trimmed = s;
-        trim(trimmed);
+        std::string trimmed = trim(s);
 
         for (char c : trimmed) {
             if (!std::isdigit(c)) {
@@ -108,6 +118,12 @@ namespace utils {
     std::string Strings::toLowerCase(std::string string) {
         std::string copy = std::move(string);
         std::transform(copy.begin(), copy.end(), copy.begin(), ::tolower);
+        return copy;
+    }
+
+    std::string Strings::toUpperCase(std::string string) {
+        std::string copy = std::move(string);
+        std::transform(copy.begin(), copy.end(), copy.begin(), ::toupper);
         return copy;
     }
 
@@ -206,6 +222,14 @@ namespace utils {
         } else {
             return s;
         }
+    }
+
+    bool Strings::ignoreCaseEquals(const std::string &a, const std::string &b) {
+        return std::equal(a.begin(), a.end(),
+                          b.begin(), b.end(),
+                          [](char a, char b) {
+                              return tolower(a) == tolower(b);
+                          });
     }
 
 }

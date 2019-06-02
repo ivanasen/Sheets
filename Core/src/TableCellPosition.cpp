@@ -25,10 +25,10 @@ namespace core {
         return _row == other.getRow() && _column == other.getColumn();
     }
 
-    TableCellPosition::TableCellPosition(std::string identifier) {
-        utils::Strings::trim(identifier);
+    TableCellPosition::TableCellPosition(const std::string &identifier) {
+        std::string trimmedBigCase = utils::Strings::toUpperCase(utils::Strings::trim(identifier));
 
-        if (!isTableCellIdentifier(identifier)) {
+        if (!isTableCellIdentifier(trimmedBigCase)) {
             throw std::invalid_argument("Invalid table cell identifier: \"" + identifier + "\"");
         }
 
@@ -38,13 +38,13 @@ namespace core {
         std::string rowStr;
         std::string colStr;
 
-        std::string::iterator iterator = identifier.begin() + rowToken.size();
+        std::string::iterator iterator = trimmedBigCase.begin() + rowToken.size();
 
-        while (iterator < identifier.end() && std::isdigit(*iterator)) {
+        while (iterator < trimmedBigCase.end() && std::isdigit(*iterator)) {
             rowStr += *(iterator++);
         }
         iterator += colToken.size();
-        while (iterator < identifier.end() && std::isdigit(*iterator)) {
+        while (iterator < trimmedBigCase.end() && std::isdigit(*iterator)) {
             colStr += *(iterator++);
         }
 

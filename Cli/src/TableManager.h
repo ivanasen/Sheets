@@ -10,7 +10,7 @@ namespace cli {
 
         void prettyPrint();
 
-        void edit();
+        void edit(const std::vector<std::string> &args);
 
         void serialize(std::ostream &ostream);
 

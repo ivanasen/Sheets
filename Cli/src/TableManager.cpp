@@ -41,25 +41,18 @@ namespace cli {
         _ostream << std::endl;
     }
 
-    void TableManager::edit() {
-        std::string cell;
-        _ostream << "Enter cell number you\'d like to edit: ";
-        std::getline(_istream, cell);
-
-        try {
-            core::TableCellPosition position(cell);
-            std::string newCellValue;
-            _ostream << "New cell value: ";
-            std::getline(_istream, newCellValue);
-
-            try {
-                _table.setCellValue(position, newCellValue);
-            } catch (const std::invalid_argument &e) {
-                _ostream << e.what() << std::endl;
-            }
-        } catch (const std::invalid_argument &e) {
-            _ostream << e.what() << std::endl;
+    void TableManager::edit(const std::vector<std::string> &args) {
+        if (args.size() < 2) {
+            throw std::invalid_argument(
+                    "Wrong usage of edit command. "
+                    "Command should be of the form \"edit R{CellRow}C{CellCol} NewCellValue\"");
         }
+
+        std::string cell = args[0];
+        std::string cellValue = args[1];
+
+        core::TableCellPosition position(cell);
+        _table.setCellValue(position, cellValue);
     }
 
     void TableManager::serialize(std::ostream &ostream) {

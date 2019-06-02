@@ -11,7 +11,7 @@ namespace core {
 
         TableCellPosition(size_t row, size_t column);
 
-        explicit TableCellPosition(std::string identifier);
+        explicit TableCellPosition(const std::string& identifier);
 
         size_t getRow() const;
 
