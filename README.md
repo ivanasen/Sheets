@@ -17,7 +17,7 @@ cmake .
 make
 ```
 
-After that a **Cli** executable should be available in the Cli project folder.
+After that a **Cli** executable should be available in the src/Cli project folder.
 
 ## General Architecture
 
