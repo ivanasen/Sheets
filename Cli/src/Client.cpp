@@ -47,6 +47,10 @@ namespace cli {
         _ostream << _quitMsg << std::endl;
     }
 
+    void Client::log(const std::string &s) {
+        _ostream << s << std::endl;
+    }
+
     void Client::setCommandPrefix(const std::string &cmdPrefix) {
         _cmdPrefix = cmdPrefix;
     }

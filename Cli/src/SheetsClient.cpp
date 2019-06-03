@@ -24,22 +24,18 @@ namespace cli {
         separatedInput.erase(separatedInput.begin());
         std::string lowerCaseCmd = utils::Strings::toLowerCase(command);
 
-        try {
-            if (lowerCaseCmd == Commands::PRINT) {
-                _handlePrint();
-            } else if (lowerCaseCmd == Commands::EDIT) {
-                _handleEdit(separatedInput);
-            } else if (lowerCaseCmd == Commands::OPEN) {
-                _handleOpen(separatedInput);
-            } else if (lowerCaseCmd == Commands::SAVE) {
-                _handleSave();
-            } else if (lowerCaseCmd == Commands::SAVE_AS) {
-                _handleSaveAs(separatedInput);
-            } else {
-                getOstream() << "Unknown command: " << command << std::endl;
-            }
-        } catch (const std::invalid_argument &e) {
-            getOstream() << e.what() << std::endl;
+        if (lowerCaseCmd == Commands::PRINT) {
+            _handlePrint();
+        } else if (lowerCaseCmd == Commands::EDIT) {
+            _handleEdit(separatedInput);
+        } else if (lowerCaseCmd == Commands::OPEN) {
+            _handleOpen(separatedInput);
+        } else if (lowerCaseCmd == Commands::SAVE) {
+            _handleSave();
+        } else if (lowerCaseCmd == Commands::SAVE_AS) {
+            _handleSaveAs(separatedInput);
+        } else {
+            log("Unknown command: " + command);
         }
     }
 
@@ -50,20 +46,24 @@ namespace cli {
     }
 
     void SheetsClient::_handlePrint() {
-        getOstream() << _tableManager.getPrettyTable();
+        log(_tableManager.getPrettyTable());
     }
 
     void SheetsClient::_handleEdit(const std::vector<std::string> &args) {
         if (args.size() < 2) {
-            throw std::invalid_argument(
-                    "Wrong usage of edit command. "
-                    "Command should be of the form \"edit R{CellRow}C{CellCol} {NewCellValue}\"");
+            log("Wrong usage of edit command. "
+                "Command should be of the form \"edit R{CellRow}C{CellCol} {NewCellValue}\"");
+            return;
         }
 
         std::string cell = args[0];
         std::string cellValue = args[1];
 
-        _tableManager.edit(cell, cellValue);
+        try {
+            _tableManager.edit(cell, cellValue);
+        } catch (const std::invalid_argument &e) {
+            log(e.what());
+        }
     }
 
     void SheetsClient::_handleOpen(const std::vector<std::string> &input) {
@@ -72,18 +72,22 @@ namespace cli {
                                         "Command should be of the form \"open {FilePath}\"");
         }
 
-        std::string filePath = input[0];
-        _tableManager.open(filePath);
+        try {
+            std::string filePath = input[0];
+            _tableManager.open(filePath);
 
-        getOstream() << "Successfully opened \"" << filePath << "\"" << std::endl;
+            log("Successfully opened \"" + filePath + "\"");
+        } catch (const std::invalid_argument &e) {
+            log(e.what());
+        }
     }
 
     void SheetsClient::_handleSave() {
         try {
             _tableManager.save();
-            getOstream() << "Successfully saved to \"" << _tableManager.getCurrentFile() << "\"" << std::endl;
+            log("Successfully saved to \"" + _tableManager.getCurrentFile() + "\"");
         } catch (const std::logic_error &e) {
-            getOstream() << e.what() << std::endl;
+            log(e.what());
         }
     }
 
@@ -93,9 +97,13 @@ namespace cli {
                                         "Command should be of the form \"saveas {FilePath}\"");
         }
 
-        std::string filePath = input[0];
-        _tableManager.saveAs(filePath);
-        getOstream() << "Successfully saved to \"" << _tableManager.getCurrentFile() << "\"" << std::endl;
+        try {
+            std::string filePath = input[0];
+            _tableManager.saveAs(filePath);
+            log("Successfully saved to \"" + _tableManager.getCurrentFile() + "\"");
+        } catch (const std::invalid_argument &e) {
+            log(e.what());
+        }
     }
 
     void SheetsClient::_onExit() {
@@ -104,7 +112,7 @@ namespace cli {
             return;
         }
 
-        getOstream() << "Save changes to \"" << _tableManager.getCurrentFile() << "\"? (y/n)\n";
+        log("Save changes to \"" + _tableManager.getCurrentFile() + "\"? (y/n)");
         bool answered = false;
         while (!answered) {
             std::string answer;
@@ -116,7 +124,7 @@ namespace cli {
             } else if (answer == "n" || answer == "no") {
                 answered = true;
             } else {
-                getOstream() << "Invalid answer. (y/n):\n";
+                log("Invalid answer. (y/n):");
             }
         }
     }

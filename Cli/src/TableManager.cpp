@@ -37,7 +37,6 @@ namespace cli {
             }
             stream << std::endl;
         }
-        stream << std::endl;
 
         return stream.str();
     }

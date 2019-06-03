@@ -38,6 +38,8 @@ namespace cli {
 
         std::ostream &getOstream();
 
+        void log(const std::string &s);
+
         std::istream &getIstream();
 
     private:
