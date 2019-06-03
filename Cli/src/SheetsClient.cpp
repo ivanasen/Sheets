@@ -135,11 +135,12 @@ namespace cli {
         while (!answered) {
             std::string answer;
             getIstream() >> answer;
+            std::string lowerCase = utils::Strings::toLowerCase(answer);
 
-            if (answer == "y" || answer == "yes") {
+            if (lowerCase == "y" || lowerCase == "yes") {
                 answered = true;
                 shouldSave = true;
-            } else if (answer == "n" || answer == "no") {
+            } else if (lowerCase == "n" || lowerCase == "no") {
                 answered = true;
                 shouldSave = false;
             } else {
