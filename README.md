@@ -1,6 +1,6 @@
 # Sheets
 
-Command-line tool for work with spread sheets. Implemented in C++. Done as a homework project for the course on Object-Oriented Programming at SU "Kliment Ohridski" FMI.
+Command-line tool for work with spreadsheets. Implemented in C++. Done as a homework project for the course on Object-Oriented Programming at SU "Kliment Ohridski" FMI.
 
 ## Usage
 
