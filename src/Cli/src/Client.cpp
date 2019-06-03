@@ -8,7 +8,6 @@
 
 namespace cli {
 
-
     Client::Client(std::ostream &ostream, std::istream &istream)
             : Client(ostream,
                      istream,

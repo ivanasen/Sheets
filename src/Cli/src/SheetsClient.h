@@ -25,15 +25,15 @@ namespace cli {
 
         void handleSaveAs(const std::vector<std::string> &input);
 
+        void checkForUnsavedFile();
+
+        void handleClose();
+
     protected:
 
         void onInput(const std::string &input) override;
 
         void onExit() override;
-
-        void checkForUnsavedFile();
-
-        void handleClose();
     };
 
 }

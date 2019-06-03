@@ -21,6 +21,10 @@ namespace cli {
     protected:
         Log log;
 
+        virtual void onInput(const std::string &input) = 0;
+
+        virtual void onExit() = 0;
+
         void setCommandPrefix(const std::string &cmdPrefix);
 
         void setQuitMessage(const std::string &quitMessage);
@@ -34,10 +38,6 @@ namespace cli {
         static std::string DEFAULT_QUIT_COMMAND();
 
         static std::string DEFAULT_QUIT_MESSAGE();
-
-        virtual void onInput(const std::string &input) = 0;
-
-        virtual void onExit() = 0;
 
         std::ostream &getOstream();
 

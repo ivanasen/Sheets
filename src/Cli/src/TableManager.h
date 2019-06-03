@@ -26,7 +26,7 @@ namespace cli {
 
     private:
         core::Table _table;
-        bool _savedChanges;
+        bool _savedChanges = false;
         std::string _currentFilePath;
 
         void serialize(std::ostream &ostream);

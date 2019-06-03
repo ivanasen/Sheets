@@ -116,6 +116,7 @@ namespace cli {
 
     void SheetsClient::handleClose() {
         checkForUnsavedFile();
+        log.i("Closed \"" + _tableManager.getCurrentFile() + "\".");
         _tableManager.createNew();
     }
 
@@ -125,7 +126,7 @@ namespace cli {
         }
 
         if (_tableManager.isNewFile()) {
-            log.i("Save changes to new file? (y/n)");
+            log.i("Save sheet to new file? (y/n)");
         } else {
             log.i("Save changes to \"" + _tableManager.getCurrentFile() + "\"? (y/n)");
         }
@@ -162,7 +163,6 @@ namespace cli {
             handleSave();
         }
 
-        log.i("Closed \"" + _tableManager.getCurrentFile() + "\".");
         getIstream().ignore();
     }
 }
