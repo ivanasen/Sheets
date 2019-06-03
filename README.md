@@ -19,13 +19,17 @@ make
 
 After that a **Cli** executable should be available in the Cli project folder.
 
-### General Architecture
+## General Architecture
 
-The project is separated in 3 different modules:
+The project is separated in to 3 different modules:
 
-1. **Core** - Table related functionality such as the editing cells, calculating formulas.
-2. **Serialization** - Serialization and Deserialization of tables.
-3. **Cli** - User Interface related functionality.
+1. **Core** - Table related functionality such as the editing cells, calculating formulas etc.
+
+![alt text](Images/Core.png "Core UML Diagram")
+
+
+2. **Serialization** - Logic for serialization and deserialization of tables.
+3. **Cli** - Command-line User Interface related functionality.
 
 A UML diagram of the different modules:
 
@@ -33,6 +37,6 @@ A UML diagram of the different modules:
 2. Serialization
 3. Cli
 
-## Used libraries
+### Third-party libraries used
 
 - Catch 2 Testing framework - [Go to Github page](https://github.com/catchorg/catch2)
