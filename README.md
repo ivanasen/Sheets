@@ -21,7 +21,7 @@ After that a **Cli** executable should be available in the Cli project folder.
 
 ## General Architecture
 
-The project is separated in to 3 different modules:
+The project is separated in to 3 main modules:
 
 1. **Core** - Table related functionality such as the editing cells, calculating formulas etc.
 
@@ -29,13 +29,13 @@ The project is separated in to 3 different modules:
 
 
 2. **Serialization** - Logic for serialization and deserialization of tables.
+
+![alt text](Images/Serialization.svg "Serialization UML Diagram")
+
 3. **Cli** - Command-line User Interface related functionality.
 
-A UML diagram of the different modules:
+![alt text](Images/Cli.svg "Cli UML Diagram")
 
-1. Core
-2. Serialization
-3. Cli
 
 ### Third-party libraries used
 
