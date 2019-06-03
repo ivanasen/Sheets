@@ -2,6 +2,8 @@
 #include <iomanip>
 #include <Strings.h>
 #include <CsvTableFormatting.h>
+#include <fstream>
+#include <filesystem>
 #include "TableManager.h"
 #include "Log.h"
 #include "Constants.h"
@@ -40,26 +42,65 @@ namespace cli {
         return stream.str();
     }
 
-    void TableManager::edit(const std::vector<std::string> &args) {
-        if (args.size() < 2) {
-            throw std::invalid_argument(
-                    "Wrong usage of edit command. "
-                    "Command should be of the form \"edit R{CellRow}C{CellCol} NewCellValue\"");
-        }
-
-        std::string cell = args[0];
-        std::string cellValue = args[1];
-
+    void TableManager::edit(const std::string &cell, const std::string &cellValue) {
         core::TableCellPosition position(cell);
         _table.setCellValue(position, cellValue);
+        _savedChanges = false;
     }
 
-    void TableManager::serialize(std::ostream &ostream) {
+    void TableManager::_serialize(std::ostream &ostream) {
         std::string serialized = serialization::csv::serialize(_table);
         ostream << serialized;
     }
 
-    void TableManager::deserializeAndLoad(std::istream &istream) {
-        serialization::csv::deserialize(istream);
+    void TableManager::_deserializeAndLoad(std::istream &istream) {
+        core::Table table = serialization::csv::deserialize(istream);
+        _table = table;
+    }
+
+    bool TableManager::areChangesSaved() const {
+        return _savedChanges;
+    }
+
+    bool TableManager::isNewFile() const {
+        return _currentFilePath.empty();
+    }
+
+    void TableManager::open(const std::string &filePath) {
+        std::ifstream file(filePath);
+
+        if (file.fail()) {
+            throw std::invalid_argument("File could not be opened: " + filePath);
+        }
+
+        _deserializeAndLoad(file);
+        _currentFilePath = filePath;
+    }
+
+    void TableManager::save() {
+        if (_currentFilePath.empty()) {
+            throw std::logic_error("Current file doesn't exist, so it can't be saved directly.");
+        }
+
+        std::ofstream file(_currentFilePath, std::ios::trunc);
+        _serialize(file);
+        file.close();
+        _savedChanges = true;
+    }
+
+    void TableManager::saveAs(const std::string &savePath) {
+        try {
+            std::ofstream file(savePath, std::ios::trunc);
+            _serialize(file);
+            file.close();
+            _savedChanges = true;
+            _currentFilePath = savePath;
+        } catch (const std::exception &e) {
+            std::cout << e.what() << std::endl;
+        }
+    }
+
+    std::string TableManager::getCurrentFile() const {
+        return _currentFilePath;
     }
 }

@@ -22,6 +22,18 @@ namespace core {
     Table::Table() : Table(DEFAULT_INITIAL_HEIGHT, DEFAULT_INITIAL_WIDTH) {
     }
 
+    Table::Table(const Table &table) {
+        _copy(table);
+    }
+
+    Table &Table::operator=(const Table &other) {
+        if (this != &other) {
+            _freeMemory();
+            _copy(other);
+        }
+        return *this;
+    }
+
     std::string Table::getCellDisplayValue(const TableCellPosition &position) const {
         size_t row = position.getRow();
         size_t col = position.getColumn();
@@ -77,7 +89,8 @@ namespace core {
         for (int i = 0; i < result.size(); i++) {
             for (int j = 0; j < result[0].size(); j++) {
                 if (_cells[i][j] != nullptr) {
-                    result[i][j] = _cells[i][j]->getDisplayValue();
+                    TableCell *cell = _cells[i][j];
+                    result[i][j] = cell->getDisplayValue();
                 }
             }
         }
@@ -98,11 +111,7 @@ namespace core {
     }
 
     Table::~Table() {
-        for (const std::vector<TableCell *> &rows : _cells) {
-            for (TableCell *cell : rows) {
-                delete cell;
-            }
-        }
+        _freeMemory();
     }
 
     std::vector<std::vector<std::string>> Table::getAllCellValues() const {
@@ -146,6 +155,37 @@ namespace core {
             return CellType::FORMULA;
         } else {
             return CellType::STRING;
+        }
+    }
+
+    void Table::_copy(const Table &table) {
+        _cells = std::vector<std::vector<TableCell *>>(
+                table.getHeight(),
+                std::vector<TableCell *>(table.getWidth()));
+        std::vector<std::vector<TableCell *>> copiedCells = table._cells;
+
+        for (size_t i = 0; i < table.getHeight(); i++) {
+            for (size_t j = 0; j < table.getWidth(); j++) {
+                if (copiedCells[i][j] != nullptr) {
+                    if (copiedCells[i][j]->getType() == CellType::FORMULA) {
+                        std::string formula = copiedCells[i][j]->getValue();
+                        _cells[i][j] = new FormulaTableCell(
+                                formula,
+                                TableCellPosition(i, j),
+                                *this);
+                    } else {
+                        _cells[i][j] = copiedCells[i][j]->clone();
+                    }
+                }
+            }
+        }
+    }
+
+    void Table::_freeMemory() {
+        for (const std::vector<TableCell *> &rows : _cells) {
+            for (TableCell *cell : rows) {
+                delete cell;
+            }
         }
     }
 }

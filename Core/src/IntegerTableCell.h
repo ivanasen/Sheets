@@ -13,6 +13,8 @@ namespace core {
 
         int getIntValue() const;
 
+        TableCell *clone() override;
+
         CellType getType() const override;
 
         ~IntegerTableCell() override;

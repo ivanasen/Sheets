@@ -3,9 +3,9 @@
 
 namespace core {
 
-    core::StringTableCell::StringTableCell(const std::string &value) {
-        _value = value;
-        _escapedValue = utils::Strings::addQuotes(utils::Strings::escape(value));
+    core::StringTableCell::StringTableCell(std::string value)
+            : _value(std::move(value)) {
+        _escapedValue = utils::Strings::addQuotes(utils::Strings::escape(_value));
     }
 
     std::string core::StringTableCell::getDisplayValue() {
@@ -18,6 +18,11 @@ namespace core {
 
     core::CellType core::StringTableCell::getType() const {
         return CellType::STRING;
+    }
+
+    TableCell *StringTableCell::clone() {
+        auto *newCell = new StringTableCell(_value);
+        return newCell;
     }
 
     core::StringTableCell::~StringTableCell() = default;

@@ -22,6 +22,11 @@ namespace core {
         return _value;
     }
 
+    TableCell *IntegerTableCell::clone() {
+        auto *newCell = new IntegerTableCell(_value);
+        return newCell;
+    }
+
     IntegerTableCell::~IntegerTableCell() = default;
 
 }

@@ -14,7 +14,7 @@ namespace core {
     FormulaTableCell::FormulaTableCell(
             std::string formula,
             TableCellPosition position,
-            const Table &table)
+            Table &table)
             : _formula(std::move(formula)),
               _tableCellPosition(position),
               _table(table) {
@@ -217,6 +217,11 @@ namespace core {
         }
     }
 
+    TableCell *FormulaTableCell::clone() {
+        auto *newCell = new FormulaTableCell(_formula, _tableCellPosition, _table);
+        return newCell;
+    }
+
     double FormulaTableCell::_getValueFromTable(const std::string &cellIdentifier) {
         const TableCell *cell = _table.getCell(TableCellPosition(cellIdentifier));
 
@@ -232,5 +237,9 @@ namespace core {
         }
 
         return 0;
+    }
+
+    void FormulaTableCell::setTable(const Table &table) {
+        _table = table;
     }
 }

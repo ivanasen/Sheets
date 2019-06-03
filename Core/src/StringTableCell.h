@@ -6,13 +6,15 @@ namespace core {
 
     class StringTableCell : public TableCell {
     public:
-        explicit StringTableCell(const std::string &value);
+        explicit StringTableCell(std::string value);
 
         std::string getDisplayValue() override;
 
         std::string getValue() override;
 
         CellType getType() const override;
+
+        TableCell* clone() override;
 
         ~StringTableCell() override;
 

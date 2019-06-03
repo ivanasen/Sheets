@@ -12,7 +12,7 @@ namespace core {
         explicit FormulaTableCell(
                 std::string formula,
                 TableCellPosition tablePosition,
-                const Table &table);
+                Table &table);
 
         std::string getDisplayValue() override;
 
@@ -22,11 +22,15 @@ namespace core {
 
         CellType getType() const override;
 
+        TableCell *clone() override;
+
+        void setTable(const Table &table);
+
         ~FormulaTableCell() override;
 
     private:
         TableCellPosition _tableCellPosition;
-        const Table &_table;
+        Table &_table;
         std::string _formula;
         std::vector<Token> _tokenizedFormula;
         std::vector<TableCellPosition> _tableCells;

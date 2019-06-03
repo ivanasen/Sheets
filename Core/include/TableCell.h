@@ -3,9 +3,10 @@
 #include <string>
 #include "../src/CellType.h"
 #include "../src/TableCellPosition.h"
+#include "../src/Cloneable.h"
 
 namespace core {
-    class TableCell {
+    class TableCell : public Cloneable<TableCell> {
     public:
         virtual std::string getDisplayValue() = 0;
 

@@ -30,4 +30,9 @@ namespace core {
     void DecimalTableCell::_formatValue() {
         _formattedValue = utils::Strings::formatAsDisplayDecimalValue(_value);
     }
+
+    TableCell *DecimalTableCell::clone() {
+        auto *newCell = new DecimalTableCell(_value);
+        return newCell;
+    }
 }

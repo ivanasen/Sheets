@@ -18,6 +18,10 @@ namespace core {
 
         Table(size_t initialHeight, size_t initialWidth);
 
+        Table(const Table &table);
+
+        Table &operator=(const Table &other);
+
         std::string getCellDisplayValue(const TableCellPosition &position) const;
 
         const TableCell *getCell(const TableCellPosition &position) const;
@@ -41,5 +45,8 @@ namespace core {
 
         void _resizeIfNotBigEnough(size_t height, size_t width);
 
+        void _copy(const Table &table);
+
+        void _freeMemory();
     };
 }

@@ -3,6 +3,7 @@
 #include "SheetsClient.h"
 #include "Commands.h"
 #include "Log.h"
+#include <filesystem>
 #include <iostream>
 
 namespace cli {
@@ -52,19 +53,71 @@ namespace cli {
         getOstream() << _tableManager.getPrettyTable();
     }
 
-    void SheetsClient::_handleEdit(const std::vector<std::string> &input) {
-        _tableManager.edit(input);
+    void SheetsClient::_handleEdit(const std::vector<std::string> &args) {
+        if (args.size() < 2) {
+            throw std::invalid_argument(
+                    "Wrong usage of edit command. "
+                    "Command should be of the form \"edit R{CellRow}C{CellCol} {NewCellValue}\"");
+        }
+
+        std::string cell = args[0];
+        std::string cellValue = args[1];
+
+        _tableManager.edit(cell, cellValue);
     }
 
     void SheetsClient::_handleOpen(const std::vector<std::string> &input) {
-        //Open
+        if (input.size() != 1) {
+            throw std::invalid_argument("Wrong usage of open command. "
+                                        "Command should be of the form \"open {FilePath}\"");
+        }
+
+        std::string filePath = input[0];
+        _tableManager.open(filePath);
+
+        getOstream() << "Successfully opened \"" << filePath << "\"" << std::endl;
     }
 
     void SheetsClient::_handleSave() {
-        //Save
+        try {
+            _tableManager.save();
+            getOstream() << "Successfully saved to \"" << _tableManager.getCurrentFile() << "\"" << std::endl;
+        } catch (const std::logic_error &e) {
+            getOstream() << e.what() << std::endl;
+        }
     }
 
     void SheetsClient::_handleSaveAs(const std::vector<std::string> &input) {
-        //Save as
+        if (input.size() != 1) {
+            throw std::invalid_argument("Wrong usage of saveas command. "
+                                        "Command should be of the form \"saveas {FilePath}\"");
+        }
+
+        std::string filePath = input[0];
+        _tableManager.saveAs(filePath);
+        getOstream() << "Successfully saved to \"" << _tableManager.getCurrentFile() << "\"" << std::endl;
+    }
+
+    void SheetsClient::_onExit() {
+        //TODO: If the file is new and the changes aren't saved ask user for a save path
+        if (_tableManager.areChangesSaved() || _tableManager.isNewFile()) {
+            return;
+        }
+
+        getOstream() << "Save changes to \"" << _tableManager.getCurrentFile() << "\"? (y/n)\n";
+        bool answered = false;
+        while (!answered) {
+            std::string answer;
+            getIstream() >> answer;
+
+            if (answer == "y" || answer == "yes") {
+                answered = true;
+                _tableManager.save();
+            } else if (answer == "n" || answer == "no") {
+                answered = true;
+            } else {
+                getOstream() << "Invalid answer. (y/n):\n";
+            }
+        }
     }
 }

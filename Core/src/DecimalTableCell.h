@@ -15,6 +15,8 @@ namespace core {
 
         CellType getType() const override;
 
+        TableCell *clone() override;
+
         ~DecimalTableCell() override;
 
     private:

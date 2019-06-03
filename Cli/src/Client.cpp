@@ -42,6 +42,8 @@ namespace cli {
             _ostream << _cmdPrefix;
         } while (input != _quitCmd);
 
+        _onExit();
+
         _ostream << _quitMsg << std::endl;
     }
 
