@@ -1,7 +1,11 @@
 #include <iostream>
 #include "Log.h"
 
-namespace utils {
+namespace cli {
+
+    Log::Log(std::ostream &ostream, std::istream &istream)
+            : _ostream(ostream), _istream(istream) {
+    }
 
     void Log::i(const std::string &s) {
         std::cout << s << std::endl;

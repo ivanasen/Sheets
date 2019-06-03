@@ -2,6 +2,7 @@
 
 #include <string>
 #include <fstream>
+#include "Log.h"
 
 namespace cli {
 
@@ -18,6 +19,8 @@ namespace cli {
         virtual void start();
 
     protected:
+        Log log;
+
         void setCommandPrefix(const std::string &cmdPrefix);
 
         void setQuitMessage(const std::string &quitMessage);
@@ -37,8 +40,6 @@ namespace cli {
         virtual void _onExit() = 0;
 
         std::ostream &getOstream();
-
-        void log(const std::string &s);
 
         std::istream &getIstream();
 

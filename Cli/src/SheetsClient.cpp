@@ -35,7 +35,7 @@ namespace cli {
         } else if (lowerCaseCmd == Commands::SAVE_AS) {
             _handleSaveAs(separatedInput);
         } else {
-            log("Unknown command: " + command);
+            log.i("Unknown command: " + command);
         }
     }
 
@@ -46,13 +46,13 @@ namespace cli {
     }
 
     void SheetsClient::_handlePrint() {
-        log(_tableManager.getPrettyTable());
+        log.i(_tableManager.getPrettyTable());
     }
 
     void SheetsClient::_handleEdit(const std::vector<std::string> &args) {
         if (args.size() < 2) {
-            log("Wrong usage of edit command. "
-                "Command should be of the form \"edit R{CellRow}C{CellCol} {NewCellValue}\"");
+            log.i("Wrong usage of edit command. "
+                  "Command should be of the form \"edit R{CellRow}C{CellCol} {NewCellValue}\"");
             return;
         }
 
@@ -62,7 +62,7 @@ namespace cli {
         try {
             _tableManager.edit(cell, cellValue);
         } catch (const std::invalid_argument &e) {
-            log(e.what());
+            log.i(e.what());
         }
     }
 
@@ -76,18 +76,18 @@ namespace cli {
             std::string filePath = input[0];
             _tableManager.open(filePath);
 
-            log("Successfully opened \"" + filePath + "\"");
+            log.i("Successfully opened \"" + filePath + "\"");
         } catch (const std::invalid_argument &e) {
-            log(e.what());
+            log.i(e.what());
         }
     }
 
     void SheetsClient::_handleSave() {
         try {
             _tableManager.save();
-            log("Successfully saved to \"" + _tableManager.getCurrentFile() + "\"");
+            log.i("Successfully saved to \"" + _tableManager.getCurrentFile() + "\"");
         } catch (const std::logic_error &e) {
-            log(e.what());
+            log.i(e.what());
         }
     }
 
@@ -100,9 +100,9 @@ namespace cli {
         try {
             std::string filePath = input[0];
             _tableManager.saveAs(filePath);
-            log("Successfully saved to \"" + _tableManager.getCurrentFile() + "\"");
+            log.i("Successfully saved to \"" + _tableManager.getCurrentFile() + "\"");
         } catch (const std::invalid_argument &e) {
-            log(e.what());
+            log.i(e.what());
         }
     }
 
@@ -112,7 +112,7 @@ namespace cli {
             return;
         }
 
-        log("Save changes to \"" + _tableManager.getCurrentFile() + "\"? (y/n)");
+        log.i("Save changes to \"" + _tableManager.getCurrentFile() + "\"? (y/n)");
         bool answered = false;
         while (!answered) {
             std::string answer;
@@ -124,7 +124,7 @@ namespace cli {
             } else if (answer == "n" || answer == "no") {
                 answered = true;
             } else {
-                log("Invalid answer. (y/n):");
+                log.i("Invalid answer. (y/n):");
             }
         }
     }
