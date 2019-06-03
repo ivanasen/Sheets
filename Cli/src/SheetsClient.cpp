@@ -34,6 +34,8 @@ namespace cli {
             handleSave();
         } else if (lowerCaseCmd == Commands::SAVE_AS) {
             handleSaveAs(separatedInput);
+        } else if (lowerCaseCmd == Commands::CLOSE) {
+            handleClose();
         } else {
             log.i("Unknown command: " + command);
         }
@@ -68,15 +70,16 @@ namespace cli {
 
     void SheetsClient::handleOpen(const std::vector<std::string> &input) {
         if (input.size() != 1) {
-            throw std::invalid_argument("Wrong usage of open command. "
-                                        "Command should be of the form \"open {FilePath}\"");
+            log.i("Wrong usage of open command. "
+                  "Command should be of the form \"open {FilePath}\"");
+            return;
         }
 
         try {
             std::string filePath = input[0];
             _tableManager.open(filePath);
 
-            log.i("Successfully opened \"" + filePath + "\"");
+            log.i("Successfully opened \"" + filePath + "\".");
         } catch (const std::invalid_argument &e) {
             log.i(e.what());
         }
@@ -85,7 +88,7 @@ namespace cli {
     void SheetsClient::handleSave() {
         try {
             _tableManager.save();
-            log.i("Successfully saved to \"" + _tableManager.getCurrentFile() + "\"");
+            log.i("Saved changes to \"" + _tableManager.getCurrentFile() + "\".");
         } catch (const std::logic_error &e) {
             log.i(e.what());
         }
@@ -93,39 +96,72 @@ namespace cli {
 
     void SheetsClient::handleSaveAs(const std::vector<std::string> &input) {
         if (input.size() != 1) {
-            throw std::invalid_argument("Wrong usage of saveas command. "
-                                        "Command should be of the form \"saveas {FilePath}\"");
+            log.i("Wrong usage of saveas command. "
+                  "Command should be of the form \"saveas {FilePath}\"");
+            return;
         }
 
         try {
             std::string filePath = input[0];
             _tableManager.saveAs(filePath);
-            log.i("Successfully saved to \"" + _tableManager.getCurrentFile() + "\"");
+            log.i("Saved changes to \"" + _tableManager.getCurrentFile() + "\".");
         } catch (const std::invalid_argument &e) {
             log.i(e.what());
         }
     }
 
     void SheetsClient::onExit() {
-        //TODO: If the file is new and the changes aren't saved ask user for a save path
-        if (_tableManager.areChangesSaved() || _tableManager.isNewFile()) {
+        checkForUnsavedFile();
+    }
+
+    void SheetsClient::handleClose() {
+        checkForUnsavedFile();
+        _tableManager.createNew();
+    }
+
+    void SheetsClient::checkForUnsavedFile() {
+        if (_tableManager.areChangesSaved()) {
             return;
         }
 
-        log.i("Save changes to \"" + _tableManager.getCurrentFile() + "\"? (y/n)");
+        if (_tableManager.isNewFile()) {
+            log.i("Save changes to new file? (y/n)");
+        } else {
+            log.i("Save changes to \"" + _tableManager.getCurrentFile() + "\"? (y/n)");
+        }
+
         bool answered = false;
+        bool shouldSave = false;
         while (!answered) {
             std::string answer;
             getIstream() >> answer;
 
             if (answer == "y" || answer == "yes") {
                 answered = true;
-                _tableManager.save();
+                shouldSave = true;
             } else if (answer == "n" || answer == "no") {
                 answered = true;
+                shouldSave = false;
             } else {
                 log.i("Invalid answer. (y/n):");
             }
         }
+
+        if (!shouldSave) {
+            getIstream().ignore();
+            return;
+        }
+
+        if (_tableManager.isNewFile()) {
+            log.i("Enter new file save path:");
+            std::string newPath;
+            getIstream() >> newPath;
+            handleSaveAs({newPath});
+        } else {
+            handleSave();
+        }
+
+        log.i("Closed \"" + _tableManager.getCurrentFile() + "\".");
+        getIstream().ignore();
     }
 }

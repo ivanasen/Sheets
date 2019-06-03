@@ -14,6 +14,8 @@ namespace cli {
 
         void open(const std::string& filePath);
 
+        void createNew();
+
         void save();
 
         void saveAs(const std::string &savePath);

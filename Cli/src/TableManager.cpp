@@ -1,4 +1,3 @@
-#include <iostream>
 #include <iomanip>
 #include <Strings.h>
 #include <CsvFormatter.h>
@@ -82,7 +81,7 @@ namespace cli {
     }
 
     void TableManager::save() {
-        if (_currentFilePath.empty()) {
+        if (isNewFile()) {
             throw std::logic_error("Current file doesn't exist, so it can't be saved directly.");
         }
 
@@ -93,18 +92,20 @@ namespace cli {
     }
 
     void TableManager::saveAs(const std::string &savePath) {
-        try {
-            std::ofstream file(savePath, std::ios::trunc);
-            serialize(file);
-            file.close();
-            _savedChanges = true;
-            _currentFilePath = savePath;
-        } catch (const std::exception &e) {
-            std::cout << e.what() << std::endl;
-        }
+        std::ofstream file(savePath, std::ios::trunc);
+        serialize(file);
+        file.close();
+        _savedChanges = true;
+        _currentFilePath = savePath;
     }
 
     std::string TableManager::getCurrentFile() const {
         return _currentFilePath;
+    }
+
+    void TableManager::createNew() {
+        _table = core::Table();
+        _savedChanges = true;
+        _currentFilePath = "";
     }
 }

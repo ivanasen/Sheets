@@ -12,6 +12,7 @@ namespace cli {
         static const std::string SAVE_AS;
         static const std::string PRINT;
         static const std::string EDIT;
+        static const std::string CLOSE;
     };
 
 }

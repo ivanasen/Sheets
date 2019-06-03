@@ -30,6 +30,10 @@ namespace cli {
         void onInput(const std::string &input) override;
 
         void onExit() override;
+
+        void checkForUnsavedFile();
+
+        void handleClose();
     };
 
 }
