@@ -1,9 +1,10 @@
 #include <iostream>
 #include <iomanip>
 #include <Strings.h>
-#include <CsvTableFormatting.h>
+#include <CsvFormatter.h>
 #include <fstream>
-#include <filesystem>
+#include <experimental/filesystem>
+#include <Files.h>
 #include "TableManager.h"
 #include "Log.h"
 #include "Constants.h"
@@ -48,12 +49,12 @@ namespace cli {
     }
 
     void TableManager::_serialize(std::ostream &ostream) {
-        std::string serialized = serialization::csv::serialize(_table);
+        std::string serialized = serialization::CsvFormatter::serialize(_table);
         ostream << serialized;
     }
 
     void TableManager::_deserializeAndLoad(std::istream &istream) {
-        core::Table table = serialization::csv::deserialize(istream);
+        core::Table table = serialization::CsvFormatter::deserialize(istream);
         _table = table;
     }
 
@@ -66,10 +67,14 @@ namespace cli {
     }
 
     void TableManager::open(const std::string &filePath) {
+        if (utils::Files::isDirectory(filePath.c_str())) {
+            throw std::invalid_argument("Given path is a directory: \"" + filePath + "\"");
+        }
+
         std::ifstream file(filePath);
 
         if (file.fail()) {
-            throw std::invalid_argument("File could not be opened: " + filePath);
+            throw std::invalid_argument("File doesn't exist or missing read permissions: \"" + filePath + "\"");
         }
 
         _deserializeAndLoad(file);

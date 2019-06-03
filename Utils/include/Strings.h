@@ -38,8 +38,11 @@ namespace utils {
 
         static std::string formatAsDisplayDecimalValue(double value);
 
+        static std::string convertIstreamToString(std::istream &istream);
+
     private:
         static const std::unordered_set<char> ESCAPE_CHARS;
+
     };
 
 }

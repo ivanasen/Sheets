@@ -81,6 +81,10 @@ namespace core {
         }
     }
 
+    void Table::setCellValue(size_t row, size_t col, const std::string &newCellValue) {
+        setCellValue(TableCellPosition(row, col), newCellValue);
+    }
+
     std::vector<std::vector<std::string>> Table::getAllCellDisplayValues() const {
         std::vector<std::vector<std::string>> result(
                 _cells.size(),

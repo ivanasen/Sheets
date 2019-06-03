@@ -239,4 +239,10 @@ namespace utils {
         return stream.str();
     }
 
+    std::string Strings::convertIstreamToString(std::istream &istream) {
+        std::ostringstream outputStream;
+        outputStream << istream.rdbuf();
+        return outputStream.str();
+    }
+
 }

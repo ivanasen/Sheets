@@ -2,7 +2,7 @@
 
 #include <Table.h>
 #include "TableCell.h"
-#include "../src/Token.h"
+#include "Token.h"
 #include "../src/TableCellPosition.h"
 
 namespace core {

@@ -1,5 +1,5 @@
 #include <catch.hpp>
-#include <CsvTableFormatting.h>
+#include <CsvFormatter.h>
 #include <../../Core/src/TableCellPosition.h>
 #include <Table.h>
 
@@ -10,7 +10,7 @@ TEST_CASE("SerializeCsv", "[CsvTableFormatting]") {
     table.setCellValue(core::TableCellPosition(2, 1), "12.3455645");
     table.setCellValue(core::TableCellPosition(2, 2), "= R2C1 + 232.35 * R3C2 - 354");
 
-    std::string serialized = serialization::csv::serialize(table);
+    std::string serialized = serialization::CsvFormatter::serialize(table);
     std::string expected = "\"Pesho's \\\"\",,,\n"
                            "12,,,\n"
                            ",12.345565,= R2C1 + 232.35 * R3C2 - 354,\n";
@@ -23,7 +23,8 @@ TEST_CASE("DeserializeCsv", "[CsvTableFormatting]") {
                              " , ,3.14,\n"
                              "3232,\"Hello World!\"          ,= R1C1 + 10 * R2C3 - 20,\n"
                              "\"Pesho, Gosho\\\" sdsd!?  \"        ";
-    core::Table table = serialization::csv::deserialize(serialized);
+    std::stringstream stream(serialized);
+    core::Table table = serialization::CsvFormatter::deserialize(stream);
 
     REQUIRE(table.getCellDisplayValue(core::TableCellPosition(1, 2)) == "3.14");
     REQUIRE(table.getCellDisplayValue(core::TableCellPosition(2, 0)) == "3232");

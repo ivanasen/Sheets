@@ -3,7 +3,7 @@ project(Serialization)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(SOURCE_FILES src/CsvTableFormatting.cpp)
+set(SOURCE_FILES src/CsvFormatter.cpp src/UnknownElementException.cpp src/UnknownElementException.h)
 
 include_directories(${PROJECT_SOURCE_DIR}/include/)
 

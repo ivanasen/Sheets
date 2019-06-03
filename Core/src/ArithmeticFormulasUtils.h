@@ -7,8 +7,6 @@
 namespace core {
     class ArithmeticFormulasUtils {
     public:
-        static bool isTableCellIdentifier(const std::string &s);
-
         static bool isFormula(const std::string &s);
 
         static bool isOperator(const std::string &s);

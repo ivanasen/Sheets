@@ -15,9 +15,14 @@ namespace core {
         EQUAL = 8,
         ROW = 9,
         COLUMN = 10,
-        IDENTIFIER = 11,
-        STRING = 12,
-        NUMBER = 13
+        ROW_SEPARATOR = 11,
+        COLUMN_SEPARATOR = 12,
+        STRING_SEPARATOR = 13,
+        ESCAPE_CHARACTER = 14,
+        IDENTIFIER = 15,
+        STRING = 16,
+        NUMBER = 17,
+        TABLE_CELL = 18
     };
 
 }

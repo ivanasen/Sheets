@@ -3,7 +3,7 @@ project(Utils)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(SOURCE_FILES src/Strings.cpp src/Log.cpp)
+set(SOURCE_FILES src/Strings.cpp src/Log.cpp src/Files.cpp)
 
 include_directories(${PROJECT_SOURCE_DIR}/include/)
 

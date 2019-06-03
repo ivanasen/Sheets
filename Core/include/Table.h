@@ -32,6 +32,8 @@ namespace core {
 
         void setCellValue(const TableCellPosition &position, const std::string &newCellValue);
 
+        void setCellValue(size_t row, size_t col, const std::string &newCellValue);
+
         size_t getHeight() const;
 
         size_t getWidth() const;
