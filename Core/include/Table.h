@@ -10,7 +10,6 @@ namespace core {
     public:
         static const size_t DEFAULT_INITIAL_HEIGHT;
         static const size_t DEFAULT_INITIAL_WIDTH;
-        static const size_t MAX_SIZE;
         static const std::string EMPTY_CELL_VALUE;
         static const std::string ERROR_TABLE_CELL_VALUE;
 
@@ -22,15 +21,13 @@ namespace core {
 
         Table &operator=(const Table &other);
 
-        std::string getCellDisplayValue(const TableCellPosition &position) const;
+        std::string getCellDisplayValue(size_t row, size_t col) const;
 
-        const TableCell *getCell(const TableCellPosition &position) const;
+        const TableCell *getCell(size_t row, size_t col) const;
 
         std::vector<std::vector<std::string>> getAllCellDisplayValues() const;
 
         std::vector<std::vector<std::string>> getAllCellValues() const;
-
-        void setCellValue(const TableCellPosition &position, const std::string &newCellValue);
 
         void setCellValue(size_t row, size_t col, const std::string &newCellValue);
 
@@ -43,12 +40,12 @@ namespace core {
     private:
         std::vector<std::vector<TableCell *>> _cells;
 
-        static CellType _determineCellType(const std::string &cellValue);
+        static CellType determineCellType(const std::string &cellValue);
 
-        void _resizeIfNotBigEnough(size_t height, size_t width);
+        void resizeIfNotBigEnough(size_t height, size_t width);
 
-        void _copy(const Table &table);
+        void copy(const Table &table);
 
-        void _freeMemory();
+        void freeMemory();
     };
 }

@@ -1,6 +1,6 @@
 #include <catch.hpp>
 #include <Table.h>
-#include <FormulaTableCell.h>
+#include <../../Core/src/TableCells/FormulaTableCell.h>
 
 using namespace core;
 

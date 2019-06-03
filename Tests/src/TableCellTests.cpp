@@ -1,6 +1,6 @@
 #include <catch.hpp>
 #include <TableCell.h>
-#include "../../Core/src/StringTableCell.h"
+#include <../../Core/src/TableCells/StringTableCell.h>
 
 using namespace core;
 

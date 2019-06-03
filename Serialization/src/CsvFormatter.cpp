@@ -1,7 +1,7 @@
 #include <string>
 #include <Strings.h>
 #include "CsvFormatter.h"
-#include "UnknownElementException.h"
+#include "exceptions/UnknownElementException.h"
 #include <TokenType.h>
 #include <TokenValues.h>
 
@@ -86,9 +86,7 @@ namespace serialization {
         long tableCol = 0;
         long tableRow = 0;
 
-        for (size_t i = 0; i < tokens.size(); i++) {
-            core::Token currentToken = tokens[i];
-
+        for (const core::Token &currentToken : tokens) {
             switch (currentToken.type) {
                 case core::TokenType::COLUMN_SEPARATOR: {
                     tableCol++;

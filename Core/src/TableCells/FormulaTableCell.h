@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Table.h>
+#include "Table.h"
 #include "TableCell.h"
 #include "Token.h"
 #include "../src/TableCellPosition.h"
@@ -36,24 +36,24 @@ namespace core {
         std::vector<TableCellPosition> _tableCells;
         std::vector<unsigned long> _bracketMatches;
 
-        double _calculate();
+        double calculate();
 
-        void _tokenizeFormula(std::string formula);
+        void tokenizeFormula(std::string formula);
 
-        double _calculate(long startIndex, long endIndex);
+        double calculate(long startIndex, long endIndex);
 
-        void _matchBrackets();
+        void matchBrackets();
 
-        void _requireValidFormat(const std::string &formula) const;
+        void requireValidFormat(const std::string &formula) const;
 
-        long _findExpressionSplitIndex(long startIndex, long endIndex) const;
+        long findExpressionSplitIndex(long startIndex, long endIndex) const;
 
-        double _evaluateToken(const Token &token);
+        double evaluateToken(const Token &token);
 
-        void _requireNoTableCellConflicts(const FormulaTableCell &cell);
+        void requireNoTableCellConflicts(const FormulaTableCell &cell);
 
-        void _requireNoTableCellConflicts(const FormulaTableCell &cell, std::vector<std::vector<size_t>> &visitedCells);
+        void requireNoTableCellConflicts(const FormulaTableCell &cell, std::vector<std::vector<size_t>> &visitedCells);
 
-        double _getValueFromTable(const std::string &cellIdentifier);
+        double getValueFromTable(const std::string &cellIdentifier);
     };
 }

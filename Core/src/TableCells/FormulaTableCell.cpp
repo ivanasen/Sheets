@@ -3,7 +3,7 @@
 
 #include "FormulaTableCell.h"
 #include "Strings.h"
-#include "ArithmeticFormulasUtils.h"
+#include "../ArithmeticFormulasUtils.h"
 #include "TokenValues.h"
 #include "IntegerTableCell.h"
 #include "DecimalTableCell.h"
@@ -18,12 +18,12 @@ namespace core {
             : _formula(std::move(formula)),
               _tableCellPosition(position),
               _table(table) {
-        _tokenizeFormula(getValue());
-        _matchBrackets();
+        tokenizeFormula(getValue());
+        matchBrackets();
     }
 
     std::string FormulaTableCell::getDisplayValue() {
-        double result = _calculate();
+        double result = calculate();
         std::string formattedResult = utils::Strings::formatAsDisplayDecimalValue(result);
         return formattedResult;
     }
@@ -42,13 +42,13 @@ namespace core {
         return _tableCells;
     }
 
-    double FormulaTableCell::_calculate() {
-        _requireNoTableCellConflicts(*this);
-        double result = _calculate(0, _tokenizedFormula.size() - 1);
+    double FormulaTableCell::calculate() {
+        requireNoTableCellConflicts(*this);
+        double result = calculate(0, _tokenizedFormula.size() - 1);
         return result;
     }
 
-    double FormulaTableCell::_calculate(
+    double FormulaTableCell::calculate(
             long startIndex,
             long endIndex) {
 
@@ -60,25 +60,25 @@ namespace core {
 
         if (_tokenizedFormula[endIndex] == TOKEN_VALUES[(int) TokenType::CLOSING_PARENTHESIS] &&
             _bracketMatches[endIndex] == startIndex) {
-            return _calculate(startIndex + 1, endIndex - 1);
+            return calculate(startIndex + 1, endIndex - 1);
         }
 
         if (startIndex == endIndex) {
-            return _evaluateToken(_tokenizedFormula[startIndex]);
+            return evaluateToken(_tokenizedFormula[startIndex]);
         }
 
-        long splitIndex = _findExpressionSplitIndex(startIndex, endIndex);
+        long splitIndex = findExpressionSplitIndex(startIndex, endIndex);
 
-        double leftResult = _calculate(startIndex, splitIndex - 1);
-        double rightResult = _calculate(splitIndex + 1, endIndex);
+        double leftResult = calculate(startIndex, splitIndex - 1);
+        double rightResult = calculate(splitIndex + 1, endIndex);
 
         double result = ArithmeticFormulasUtils::applyOperator(leftResult, rightResult, _tokenizedFormula[splitIndex]);
 
         return result;
     }
 
-    void FormulaTableCell::_tokenizeFormula(std::string formula) {
-        _requireValidFormat(formula);
+    void FormulaTableCell::tokenizeFormula(std::string formula) {
+        requireValidFormat(formula);
 
         const char decimalSeparator = TOKEN_VALUES[(int) TokenType::DECIMAL_SEPARATOR].value[0];
         const char openingParenthesis = TOKEN_VALUES[(int) TokenType::OPENING_PARENTHESIS].value[0];
@@ -119,7 +119,7 @@ namespace core {
         }
     }
 
-    void FormulaTableCell::_matchBrackets() {
+    void FormulaTableCell::matchBrackets() {
         _bracketMatches.resize(_tokenizedFormula.size());
         std::stack<std::pair<char, unsigned long>> bracketsStack;
 
@@ -146,26 +146,26 @@ namespace core {
         }
     }
 
-    void FormulaTableCell::_requireValidFormat(const std::string &formula) const {
+    void FormulaTableCell::requireValidFormat(const std::string &formula) const {
         if (!ArithmeticFormulasUtils::isFormula(formula)) {
             throw std::invalid_argument("Invalid formula: \"" + formula + "\"");
         }
     }
 
-    double FormulaTableCell::_evaluateToken(const Token &token) {
+    double FormulaTableCell::evaluateToken(const Token &token) {
         switch (token.type) {
             case TokenType::NUMBER:
                 return std::stod(token.value);
             case TokenType::STRING:
                 return 0;
             case TokenType::IDENTIFIER:
-                return _getValueFromTable(token.value);
+                return getValueFromTable(token.value);
             default:
                 throw std::invalid_argument("Unsupported token type");
         }
     }
 
-    long FormulaTableCell::_findExpressionSplitIndex(long startIndex, long endIndex) const {
+    long FormulaTableCell::findExpressionSplitIndex(long startIndex, long endIndex) const {
         long splitIndex = 0;
         int minSplitPrecedence = 3;
 
@@ -185,15 +185,15 @@ namespace core {
         return splitIndex;
     }
 
-    void FormulaTableCell::_requireNoTableCellConflicts(const FormulaTableCell &cell) {
+    void FormulaTableCell::requireNoTableCellConflicts(const FormulaTableCell &cell) {
         std::vector<std::vector<size_t>> visitedCells(
                 _table.getHeight(),
                 std::vector<size_t>(_table.getWidth())
         );
-        _requireNoTableCellConflicts(cell, visitedCells);
+        requireNoTableCellConflicts(cell, visitedCells);
     }
 
-    void FormulaTableCell::_requireNoTableCellConflicts(
+    void FormulaTableCell::requireNoTableCellConflicts(
             const FormulaTableCell &cell,
             std::vector<std::vector<size_t>> &visitedCells) {
         std::vector<TableCellPosition> cellPositions = cell.getTablePositionDependencies();
@@ -209,10 +209,10 @@ namespace core {
 
             visitedCells[pos.getRow()][pos.getColumn()] = true;
 
-            const TableCell *containedCell = _table.getCell(pos);
+            const TableCell *containedCell = _table.getCell(pos.getRow(), pos.getColumn());
             if (containedCell != nullptr && containedCell->getType() == CellType::FORMULA) {
                 FormulaTableCell formula = *((FormulaTableCell *) containedCell);
-                _requireNoTableCellConflicts(formula, visitedCells);
+                requireNoTableCellConflicts(formula, visitedCells);
             }
         }
     }
@@ -222,8 +222,9 @@ namespace core {
         return newCell;
     }
 
-    double FormulaTableCell::_getValueFromTable(const std::string &cellIdentifier) {
-        const TableCell *cell = _table.getCell(TableCellPosition(cellIdentifier));
+    double FormulaTableCell::getValueFromTable(const std::string &cellIdentifier) {
+        TableCellPosition position(cellIdentifier);
+        const TableCell *cell = _table.getCell(position.getRow(), position.getColumn());
 
         if (cell != nullptr) {
             switch (cell->getType()) {

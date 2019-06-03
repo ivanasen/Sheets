@@ -27,9 +27,9 @@ namespace cli {
         bool _savedChanges;
         std::string _currentFilePath;
 
-        void _serialize(std::ostream &ostream);
+        void serialize(std::ostream &ostream);
 
-        void _deserializeAndLoad(std::istream &istream);
+        void deserializeAndLoad(std::istream &istream);
     };
 
 }

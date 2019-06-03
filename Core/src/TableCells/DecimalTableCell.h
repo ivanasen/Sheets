@@ -24,7 +24,7 @@ namespace core {
         std::string _formattedValue;
         double _value;
 
-        void _formatValue();
+        void formatValue();
     };
 
 }

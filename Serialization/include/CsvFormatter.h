@@ -12,6 +12,7 @@ namespace serialization {
 
         static std::string serialize(const core::Table &table);
 
+    private:
         static std::string extractNextCellElement(std::istream &istream, char currentChar);
 
         static std::vector<core::Token> tokenizeSerializedTable(std::istream &istream);

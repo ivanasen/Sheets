@@ -6,7 +6,7 @@ namespace core {
 
     DecimalTableCell::DecimalTableCell(double value)
             : _value(value), _strValue(std::to_string(value)) {
-        _formatValue();
+        formatValue();
     }
 
     std::string DecimalTableCell::getValue() {
@@ -27,7 +27,7 @@ namespace core {
 
     DecimalTableCell::~DecimalTableCell() = default;
 
-    void DecimalTableCell::_formatValue() {
+    void DecimalTableCell::formatValue() {
         _formattedValue = utils::Strings::formatAsDisplayDecimalValue(_value);
     }
 

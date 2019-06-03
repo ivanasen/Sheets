@@ -38,12 +38,12 @@ namespace cli {
             getline(_istream, input);
             input = utils::Strings::trim(input);
             if (!input.empty() && input != _quitCmd) {
-                _onInput(input);
+                onInput(input);
             }
             _ostream << _cmdPrefix;
         } while (input != _quitCmd);
 
-        _onExit();
+        onExit();
 
         _ostream << _quitMsg << std::endl;
     }

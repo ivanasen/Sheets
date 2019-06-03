@@ -35,9 +35,9 @@ namespace cli {
 
         static std::string DEFAULT_QUIT_MESSAGE();
 
-        virtual void _onInput(const std::string &input) = 0;
+        virtual void onInput(const std::string &input) = 0;
 
-        virtual void _onExit() = 0;
+        virtual void onExit() = 0;
 
         std::ostream &getOstream();
 

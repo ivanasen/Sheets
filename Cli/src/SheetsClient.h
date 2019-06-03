@@ -13,23 +13,23 @@ namespace cli {
     private:
         TableManager _tableManager;
 
-        void _handlePrint();
+        void handlePrint();
 
-        void _handleEdit(const std::vector<std::string> &args);
+        void handleEdit(const std::vector<std::string> &args);
 
-        static std::vector<std::string> _separateInput(const std::string &input);
+        static std::vector<std::string> separateInput(const std::string &input);
 
-        void _handleOpen(const std::vector<std::string> &input);
+        void handleOpen(const std::vector<std::string> &input);
 
-        void _handleSave();
+        void handleSave();
 
-        void _handleSaveAs(const std::vector<std::string> &input);
+        void handleSaveAs(const std::vector<std::string> &input);
 
     protected:
 
-        void _onInput(const std::string &input) override;
+        void onInput(const std::string &input) override;
 
-        void _onExit() override;
+        void onExit() override;
     };
 
 }

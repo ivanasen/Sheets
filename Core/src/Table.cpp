@@ -2,16 +2,15 @@
 #include <Strings.h>
 #include "ArithmeticFormulasUtils.h"
 #include "TokenValues.h"
-#include "FormulaTableCell.h"
 #include "exceptions/TableCellRangeException.h"
-#include "DecimalTableCell.h"
-#include "IntegerTableCell.h"
-#include "StringTableCell.h"
+#include "TableCells/FormulaTableCell.h"
+#include "TableCells/DecimalTableCell.h"
+#include "TableCells/IntegerTableCell.h"
+#include "TableCells/StringTableCell.h"
 
 namespace core {
     const size_t Table::DEFAULT_INITIAL_HEIGHT = 10;
     const size_t Table::DEFAULT_INITIAL_WIDTH = 10;
-    const size_t Table::MAX_SIZE = 1000;
     const std::string Table::EMPTY_CELL_VALUE = "";
     const std::string Table::ERROR_TABLE_CELL_VALUE = "Error";
 
@@ -23,21 +22,18 @@ namespace core {
     }
 
     Table::Table(const Table &table) {
-        _copy(table);
+        copy(table);
     }
 
     Table &Table::operator=(const Table &other) {
         if (this != &other) {
-            _freeMemory();
-            _copy(other);
+            freeMemory();
+            copy(other);
         }
         return *this;
     }
 
-    std::string Table::getCellDisplayValue(const TableCellPosition &position) const {
-        size_t row = position.getRow();
-        size_t col = position.getColumn();
-
+    std::string Table::getCellDisplayValue(size_t row, size_t col) const {
         if (row >= _cells.size()
             || (!_cells.empty() && col >= _cells[0].size())
             || _cells[row][col] == nullptr) {
@@ -51,17 +47,14 @@ namespace core {
         }
     }
 
-    void Table::setCellValue(const TableCellPosition &position, const std::string &newCellValue) {
-        size_t row = position.getRow();
-        size_t col = position.getColumn();
+    void Table::setCellValue(size_t row, size_t col, const std::string &newCellValue) {
+        resizeIfNotBigEnough(row + 1, col + 1);
 
-        _resizeIfNotBigEnough(row + 1, col + 1);
-
-        CellType newCellType = _determineCellType(newCellValue);
+        CellType newCellType = determineCellType(newCellValue);
 
         switch (newCellType) {
             case CellType::FORMULA:
-                _cells[row][col] = new FormulaTableCell(newCellValue, position, *this);
+                _cells[row][col] = new FormulaTableCell(newCellValue, TableCellPosition(row, col), *this);
                 break;
 
             case CellType::DECIMAL:
@@ -81,29 +74,22 @@ namespace core {
         }
     }
 
-    void Table::setCellValue(size_t row, size_t col, const std::string &newCellValue) {
-        setCellValue(TableCellPosition(row, col), newCellValue);
-    }
-
     std::vector<std::vector<std::string>> Table::getAllCellDisplayValues() const {
         std::vector<std::vector<std::string>> result(
-                _cells.size(),
-                std::vector<std::string>(_cells[0].size()));
+                getHeight(),
+                std::vector<std::string>(getWidth()));
 
-        for (int i = 0; i < result.size(); i++) {
-            for (int j = 0; j < result[0].size(); j++) {
-                if (_cells[i][j] != nullptr) {
-                    TableCell *cell = _cells[i][j];
-                    result[i][j] = cell->getDisplayValue();
-                }
+        for (size_t i = 0; i < result.size(); i++) {
+            for (size_t j = 0; j < result[0].size(); j++) {
+                result[i][j] = getCellDisplayValue(i, j);
             }
         }
 
         return result;
     }
 
-    const TableCell *Table::getCell(const TableCellPosition &position) const {
-        return _cells[position.getRow()][position.getColumn()];
+    const TableCell *Table::getCell(size_t row, size_t col) const {
+        return _cells[row][col];
     }
 
     size_t Table::getHeight() const {
@@ -115,13 +101,13 @@ namespace core {
     }
 
     Table::~Table() {
-        _freeMemory();
+        freeMemory();
     }
 
     std::vector<std::vector<std::string>> Table::getAllCellValues() const {
         std::vector<std::vector<std::string>> result(
-                _cells.size(),
-                std::vector<std::string>(_cells[0].size()));
+                getHeight(),
+                std::vector<std::string>(getWidth()));
 
         for (int i = 0; i < result.size(); i++) {
             for (int j = 0; j < result[0].size(); j++) {
@@ -134,11 +120,7 @@ namespace core {
         return result;
     }
 
-    void Table::_resizeIfNotBigEnough(size_t height, size_t width) {
-        if (height > MAX_SIZE || width > MAX_SIZE) {
-            throw TableCellRangeException();
-        }
-
+    void Table::resizeIfNotBigEnough(size_t height, size_t width) {
         if (height > _cells.size()) {
             _cells.resize(height);
         }
@@ -150,7 +132,7 @@ namespace core {
         }
     }
 
-    CellType Table::_determineCellType(const std::string &cellValue) {
+    CellType Table::determineCellType(const std::string &cellValue) {
         if (utils::Strings::isInteger(cellValue)) {
             return CellType::INTEGER;
         } else if (utils::Strings::isDecimal(cellValue)) {
@@ -162,7 +144,7 @@ namespace core {
         }
     }
 
-    void Table::_copy(const Table &table) {
+    void Table::copy(const Table &table) {
         _cells = std::vector<std::vector<TableCell *>>(
                 table.getHeight(),
                 std::vector<TableCell *>(table.getWidth()));
@@ -185,7 +167,7 @@ namespace core {
         }
     }
 
-    void Table::_freeMemory() {
+    void Table::freeMemory() {
         for (const std::vector<TableCell *> &rows : _cells) {
             for (TableCell *cell : rows) {
                 delete cell;

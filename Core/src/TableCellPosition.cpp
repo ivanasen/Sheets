@@ -53,7 +53,7 @@ namespace core {
             long row = std::stoul(rowStr) - 1;
             long column = std::stoul(colStr) - 1;
 
-            if (row < 0 || column < 0 || row > Table::MAX_SIZE || column > Table::MAX_SIZE) {
+            if (row < 0 || column < 0) {
                 throw TableCellRangeException();
             }
 

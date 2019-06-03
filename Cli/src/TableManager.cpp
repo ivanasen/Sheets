@@ -44,16 +44,16 @@ namespace cli {
 
     void TableManager::edit(const std::string &cell, const std::string &cellValue) {
         core::TableCellPosition position(cell);
-        _table.setCellValue(position, cellValue);
+        _table.setCellValue(position.getRow(), position.getColumn(), cellValue);
         _savedChanges = false;
     }
 
-    void TableManager::_serialize(std::ostream &ostream) {
+    void TableManager::serialize(std::ostream &ostream) {
         std::string serialized = serialization::CsvFormatter::serialize(_table);
         ostream << serialized;
     }
 
-    void TableManager::_deserializeAndLoad(std::istream &istream) {
+    void TableManager::deserializeAndLoad(std::istream &istream) {
         core::Table table = serialization::CsvFormatter::deserialize(istream);
         _table = table;
     }
@@ -77,7 +77,7 @@ namespace cli {
             throw std::invalid_argument("File doesn't exist or missing read permissions: \"" + filePath + "\"");
         }
 
-        _deserializeAndLoad(file);
+        deserializeAndLoad(file);
         _currentFilePath = filePath;
     }
 
@@ -87,7 +87,7 @@ namespace cli {
         }
 
         std::ofstream file(_currentFilePath, std::ios::trunc);
-        _serialize(file);
+        serialize(file);
         file.close();
         _savedChanges = true;
     }
@@ -95,7 +95,7 @@ namespace cli {
     void TableManager::saveAs(const std::string &savePath) {
         try {
             std::ofstream file(savePath, std::ios::trunc);
-            _serialize(file);
+            serialize(file);
             file.close();
             _savedChanges = true;
             _currentFilePath = savePath;

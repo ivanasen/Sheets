@@ -13,8 +13,8 @@ namespace cli {
         setQuitMessage("Exiting Sheets...");
     }
 
-    void SheetsClient::_onInput(const std::string &input) {
-        std::vector<std::string> separatedInput = _separateInput(input);
+    void SheetsClient::onInput(const std::string &input) {
+        std::vector<std::string> separatedInput = separateInput(input);
 
         if (separatedInput.empty()) {
             return;
@@ -25,31 +25,31 @@ namespace cli {
         std::string lowerCaseCmd = utils::Strings::toLowerCase(command);
 
         if (lowerCaseCmd == Commands::PRINT) {
-            _handlePrint();
+            handlePrint();
         } else if (lowerCaseCmd == Commands::EDIT) {
-            _handleEdit(separatedInput);
+            handleEdit(separatedInput);
         } else if (lowerCaseCmd == Commands::OPEN) {
-            _handleOpen(separatedInput);
+            handleOpen(separatedInput);
         } else if (lowerCaseCmd == Commands::SAVE) {
-            _handleSave();
+            handleSave();
         } else if (lowerCaseCmd == Commands::SAVE_AS) {
-            _handleSaveAs(separatedInput);
+            handleSaveAs(separatedInput);
         } else {
             log.i("Unknown command: " + command);
         }
     }
 
-    std::vector<std::string> SheetsClient::_separateInput(const std::string &input) {
+    std::vector<std::string> SheetsClient::separateInput(const std::string &input) {
         std::string trimmed = utils::Strings::trim(input);
         std::vector<std::string> separatedInput = utils::Strings::splitBySpaces(input, 2);
         return separatedInput;
     }
 
-    void SheetsClient::_handlePrint() {
+    void SheetsClient::handlePrint() {
         log.i(_tableManager.getPrettyTable());
     }
 
-    void SheetsClient::_handleEdit(const std::vector<std::string> &args) {
+    void SheetsClient::handleEdit(const std::vector<std::string> &args) {
         if (args.size() < 2) {
             log.i("Wrong usage of edit command. "
                   "Command should be of the form \"edit R{CellRow}C{CellCol} {NewCellValue}\"");
@@ -66,7 +66,7 @@ namespace cli {
         }
     }
 
-    void SheetsClient::_handleOpen(const std::vector<std::string> &input) {
+    void SheetsClient::handleOpen(const std::vector<std::string> &input) {
         if (input.size() != 1) {
             throw std::invalid_argument("Wrong usage of open command. "
                                         "Command should be of the form \"open {FilePath}\"");
@@ -82,7 +82,7 @@ namespace cli {
         }
     }
 
-    void SheetsClient::_handleSave() {
+    void SheetsClient::handleSave() {
         try {
             _tableManager.save();
             log.i("Successfully saved to \"" + _tableManager.getCurrentFile() + "\"");
@@ -91,7 +91,7 @@ namespace cli {
         }
     }
 
-    void SheetsClient::_handleSaveAs(const std::vector<std::string> &input) {
+    void SheetsClient::handleSaveAs(const std::vector<std::string> &input) {
         if (input.size() != 1) {
             throw std::invalid_argument("Wrong usage of saveas command. "
                                         "Command should be of the form \"saveas {FilePath}\"");
@@ -106,7 +106,7 @@ namespace cli {
         }
     }
 
-    void SheetsClient::_onExit() {
+    void SheetsClient::onExit() {
         //TODO: If the file is new and the changes aren't saved ask user for a save path
         if (_tableManager.areChangesSaved() || _tableManager.isNewFile()) {
             return;
