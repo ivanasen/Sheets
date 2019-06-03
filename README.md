@@ -25,7 +25,7 @@ The project is separated in to 3 different modules:
 
 1. **Core** - Table related functionality such as the editing cells, calculating formulas etc.
 
-![alt text](Images/Core.png "Core UML Diagram")
+![alt text](Images/Core.svg "Core UML Diagram")
 
 
 2. **Serialization** - Logic for serialization and deserialization of tables.
